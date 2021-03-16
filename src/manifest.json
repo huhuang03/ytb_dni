@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "ytb not-interested button",
+    "description": "add the not-interest butotn to video.",
+    "version": "0.0.1",
+    "content_scripts": [
+        {
+            "matches": ["https://www.youtube.com/"],
+            "js": ["add_not_interested.js"]
+        }
+    ],
+
+    "icons": {
+        "128": "not_interested.svg" 
+    },
+    "options_page": "options.html"
+}

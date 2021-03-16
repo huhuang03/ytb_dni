@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="37px" height="37px" viewbox="0 0 37 37" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path d="M0 16.5C0 7.3873 7.3873 0 16.5 0C25.6127 0 33 7.3873 33 16.5C33 25.6127 25.6127 33 16.5 33C7.3873 33 0 25.6127 0 16.5Z" transform="translate(2 2)" id="path_1" />
+  </defs>
+  <g id="Ellipse">
+    <use xlink:href="#path_1" fill="none" stroke="#909090" stroke-width="4" />
+    <use stroke="none" fill="#000000" fill-opacity="0" xlink:href="#path_1" fill-rule="evenodd" />
+  </g>
+  <path d="M0 0L25 23" transform="translate(6 7)" id="Line" fill="#FFFFFF" fill-rule="evenodd" stroke="#909090" stroke-width="2" stroke-linecap="square" />
+</svg>
