@@ -1,3 +1,4 @@
 * TODOS
-- create the icon 
+- better wait for node create
+- handle data load.
 - adjust the ui

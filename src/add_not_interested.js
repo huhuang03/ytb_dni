@@ -13,6 +13,7 @@ class Item {
             // 还没加载完
 
             this.waitAndDo(() => {
+                console.log(`inner do`)
                 this.frontMentuContainer = this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
                 this.hasAdded = this.frontMentuContainer.style.flexDirection
                 if (!this.hasAdded) {
@@ -24,14 +25,28 @@ class Item {
                     }
                     this.frontMentuContainer.append(button)
                 }
-            }, 1000)
+            }, () => {
+                this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
+            }, 2000)
         }
     }
 
-    waitAndDo(func, timeout) {
+    _innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval) {
         setTimeout(() => {
-            func()
-        }, timeout)
+            if (checkFunc()) {
+                console.log(`check success`)
+                func()
+            } else if ((new Date().getTime() - startTime) < timeout) {
+                console.log(`check failed`)
+                this._innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval)        
+            }
+        }, checkInterval)
+    }
+
+
+    waitAndDo(func, checkFunc, timeout, checkInterval = 50) {
+        var startTime = new Date().getTime()
+        this._innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval)
     }
 
     doNotInterest() {
@@ -76,15 +91,14 @@ class Item {
 }
 
 function getDetails() {
-    details = Array.from(document.querySelectorAll("ytd-rich-grid-media div .style-scope.ytd-rich-grid-media"))
+    console.log("getDetails called")
+    var details = Array.from(document.querySelectorAll("ytd-rich-grid-media div .style-scope.ytd-rich-grid-media"))
     details = details.filter(d => d.id == "details")
-    detail = details[0]
     return details
 }
 
-details = getDetails()
+var details = getDetails()
 
-items = details.map(d => new Item(d))
-item = items[0]
-root = item.root
-
+var items = details.map(d => new Item(d))
+var item = items[0]
+var root = item.root
