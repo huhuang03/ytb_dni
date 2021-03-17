@@ -10,18 +10,28 @@ class Item {
     init() {
         this.canAddBt = this.root.offsetWidth > 0
         if (this.canAddBt) {
-            this.frontMentuContainer = this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
-            this.hasAdded = this.frontMentuContainer.style.flexDirection
-            if (!this.hasAdded) {
-                this.frontMentuContainer.style.flexDirection = "column"
-                this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
-                var button = this.createButton()
-                button.onclick = () => {
-                    this.doNotInterest()
+            // 还没加载完
+
+            this.waitAndDo(() => {
+                this.frontMentuContainer = this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
+                this.hasAdded = this.frontMentuContainer.style.flexDirection
+                if (!this.hasAdded) {
+                    this.frontMentuContainer.style.flexDirection = "column"
+                    this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
+                    var button = this.createButton()
+                    button.onclick = () => {
+                        this.doNotInterest()
+                    }
+                    this.frontMentuContainer.append(button)
                 }
-                this.frontMentuContainer.append(button)
-            }
+            }, 1000)
         }
+    }
+
+    waitAndDo(func, timeout) {
+        setTimeout(() => {
+            func()
+        }, timeout)
     }
 
     doNotInterest() {
