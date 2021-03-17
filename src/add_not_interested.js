@@ -1,4 +1,4 @@
-console.log("add_not_interested.js called")
+// console.log("add_not_interested.js called")
 // how to do ??
 
 class Item {
@@ -8,39 +8,73 @@ class Item {
     }
 
     init() {
-        this.front_menu_container = root.querySelectorAll("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
+        this.canAddBt = this.root.offsetWidth > 0
+        if (this.canAddBt) {
+            this.frontMentuContainer = this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
+            this.hasAdded = this.frontMentuContainer.style.flexDirection
+            if (!this.hasAdded) {
+                this.frontMentuContainer.style.flexDirection = "column"
+                this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
+                var button = this.createButton()
+                button.onclick = () => {
+                    this.doNotInterest()
+                }
+                this.frontMentuContainer.append(button)
+            }
+        }
     }
 
-    parse() {
+    doNotInterest() {
+        this.btMenu.click()
+        setTimeout(() => {
+            this.popup_menu_items = document.querySelectorAll("ytd-menu-service-item-renderer")
+            if (this.popup_menu_items.length >= 6) {
+                this.popup_menu_items[3].click()
+            } else {
+
+            }
+        }, 10)
+    }
+
+    createButton() {
+        function getNode(n, v) {
+            n = document.createElementNS("http://www.w3.org/2000/svg", n);
+            for (var p in v)
+                n.setAttributeNS(null, p.replace(/[A-Z]/g, function(m, p, o, s) { return "-" + m.toLowerCase(); }), v[p]);
+            return n
+        }
+
+        var svg = getNode("svg", {viewBox: "0 0 24 24", width: 24, height: 24});
+        document.body.insertBefore(svg, document.body.firstChild);
+
+
+        var g = getNode('g', {class: ''});
+        svg.appendChild(g)
+
+        var path1 = getNode("path", {d: 'M0 0h24v24H0z', fill: 'none', class: 'style-scope yt-icon'})
+        var path2 = getNode("path", {d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z', 
+            class: 'style-scope yt-icon'})
+        g.appendChild(path1)
+        g.appendChild(path2)
+
+        var button = document.createElement("button");
+        button.setAttribute("class", "style-scope yt-icon-button")
+        button.appendChild(svg)
+
+        return button
     }
 }
 
-
-// ytd-rich-grid-media:not(:hover) ytd-menu-renderer.ytd-rich-grid-media:not([menu-active]).ytd-rich-grid-media:not(:focus-within) {
-//    /* opacity: 0; */
-// }
-function getMenuItems() {
-    items = document.querySelectorAll("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
-    return items
+function getDetails() {
+    details = Array.from(document.querySelectorAll("ytd-rich-grid-media div .style-scope.ytd-rich-grid-media"))
+    details = details.filter(d => d.id == "details")
+    detail = details[0]
+    return details
 }
 
-items = getMenuItems()
-console.log(items)
+details = getDetails()
+
+items = details.map(d => new Item(d))
 item = items[0]
-item1 = items[1]
-item4 = items[4]
-menu = item
+root = item.root
 
-function handleSingleMenu(menu) {
-    childNodes = menu.childNodes;
-    bt_child = menu.querySelector("yt-icon-button")
-    // bt_child_clone = bt_child.cloneNode(true)
-
-    var btn = document.createElement("BUTTON");   // Create a <button> element
-    btn.innerHTML = "CLICK ME";                   // Insert text
-    document.body.appendChild(btn);               // Append <button> to <body
-
-    menu.appendChild(btn)
-}
-
-// how to add the button click??
