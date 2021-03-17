@@ -26,7 +26,7 @@ class Item {
                     this.frontMentuContainer.append(button)
                 }
             }, () => {
-                this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
+                return this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
             }, 2000)
         }
     }
@@ -34,10 +34,8 @@ class Item {
     _innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval) {
         setTimeout(() => {
             if (checkFunc()) {
-                console.log(`check success`)
                 func()
             } else if ((new Date().getTime() - startTime) < timeout) {
-                console.log(`check failed`)
                 this._innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval)        
             }
         }, checkInterval)
@@ -98,7 +96,11 @@ function getDetails() {
 }
 
 var details = getDetails()
+console.log(details)
+
+// new Item(details[0])
 
 var items = details.map(d => new Item(d))
-var item = items[0]
-var root = item.root
+// var item = items[0]
+// var root = item.root
+// console.log(root)
