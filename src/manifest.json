@@ -3,6 +3,7 @@
     "name": "ytb not-interested button",
     "description": "add the not-interest butotn to video.",
     "version": "0.0.1",
+
     "content_scripts": [
         {
             "matches": ["https://www.youtube.com/"],
@@ -11,7 +12,10 @@
     ],
 
     "icons": {
-        "128": "not_interested.svg" 
+        "16": "ic_not_interested_16.png",
+        "32": "ic_not_interested_32.png",
+        "48": "ic_not_interested_48.png",
+        "128": "ic_not_interested_128.png"
     },
     "options_page": "options.html"
 }

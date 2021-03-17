@@ -1,0 +1,3 @@
+* TODOS
+- create the icon 
+- adjust the ui
