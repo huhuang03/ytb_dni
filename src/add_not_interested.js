@@ -13,13 +13,14 @@ class Item {
             // 还没加载完
 
             this.waitAndDo(() => {
-                console.log(`inner do`)
                 this.frontMentuContainer = this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
                 this.hasAdded = this.frontMentuContainer.style.flexDirection
+
                 if (!this.hasAdded) {
                     this.frontMentuContainer.style.flexDirection = "column"
                     this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
-                    var button = this.createButton()
+
+                    var button = this.createButton(this.btMenu)
                     button.onclick = () => {
                         this.doNotInterest()
                     }
@@ -59,7 +60,7 @@ class Item {
         }, 10)
     }
 
-    createButton() {
+    _createSvg() {
         function getNode(n, v) {
             n = document.createElementNS("http://www.w3.org/2000/svg", n);
             for (var p in v)
@@ -79,10 +80,21 @@ class Item {
             class: 'style-scope yt-icon'})
         g.appendChild(path1)
         g.appendChild(path2)
+        return svg
+    }
+
+    createButton(btMenu) {
+        // strange, not work
+        // var btNot = btMenu.cloneNode(true)
+        // var originSvg = btNot.querySelector("svg")
+        // var parent = originSvg.parentElement
+        // var svg = this._createSvg()
+        // parent.appendChild(svg)
 
         var button = document.createElement("button");
         button.setAttribute("class", "style-scope yt-icon-button")
-        button.appendChild(svg)
+        button.style.color = 'red';
+        button.appendChild(this._createSvg())
 
         return button
     }
@@ -96,11 +108,10 @@ function getDetails() {
 }
 
 var details = getDetails()
-console.log(details)
 
-// new Item(details[0])
 
 var items = details.map(d => new Item(d))
+// new Item(details[0])
 // var item = items[0]
 // var root = item.root
 // console.log(root)
