@@ -2,3 +2,8 @@
 - better wait for node create
 - handle data load.
 - adjust the ui
+
+* color
+#button.ytd-menu-renderer yt-icon.ytd-menu-renderer {
+    color: var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-inactive));
+}
