@@ -54,8 +54,9 @@ class Item {
             this.popup_menu_items = document.querySelectorAll("ytd-menu-service-item-renderer")
             if (this.popup_menu_items.length >= 6) {
                 this.popup_menu_items[3].click()
-            } else {
-
+            } else if (this.popup_menu_items.length == 1) {
+                this.popup_menu_items[0].click()
+                console.log(this.popup_menu_items[0])
             }
         }, 10)
     }
