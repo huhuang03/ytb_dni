@@ -1,6 +1,3 @@
-// console.log("add_not_interested.js called")
-// how to do ??
-
 const SVG_ID = "not_interested_svg"
 
 function addCss() {
@@ -124,16 +121,19 @@ function getDetails() {
     return details
 }
 
-var details = getDetails()
-
-
-var items = details.map(d => new Item(d))
 // new Item(details[0])
 // var item = items[0]
 // var root = item.root
 // console.log(root)
 
 
-chrome.webRequest.onBeforeRequest.addListener(() => {
-    console.log('on web Request')
-})
+function run() {
+    var details = getDetails()
+    details.map(d => new Item(d))
+}
+
+setInterval(() => {
+    run()
+}, 10000)
+
+run()
