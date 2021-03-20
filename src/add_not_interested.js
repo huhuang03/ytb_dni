@@ -1,6 +1,23 @@
 // console.log("add_not_interested.js called")
 // how to do ??
 
+const SVG_ID = "not_interested_svg"
+
+function addCss() {
+    // add css
+    var css = `#${SVG_ID}:hover {fill: #606060}\n #${SVG_ID} {fill: #8b8b8b}`
+    var style = document.createElement('style');
+
+    if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+    } else {
+        style.appendChild(document.createTextNode(css));
+    }
+    document.getElementsByTagName('head')[0].appendChild(style);
+}
+
+addCss()
+
 class Item {
     constructor(root) {
         this.root = root
@@ -28,7 +45,7 @@ class Item {
                 }
             }, () => {
                 return this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
-            }, 2000)
+            }, 4000)
         }
     }
 
@@ -69,7 +86,13 @@ class Item {
             return n
         }
 
-        var svg = getNode("svg", {viewBox: "0 0 24 24", width: 24, height: 24});
+        var width = 24
+        var height = width
+
+        var svg = getNode("svg", {width: width, height: height});
+        var padding = 2
+        svg.setAttribute('viewBox', `-${padding} -${padding} ${width + padding * 2} ${height + padding * 2}`)
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
         document.body.insertBefore(svg, document.body.firstChild);
 
 
@@ -85,24 +108,17 @@ class Item {
     }
 
     createButton(btMenu) {
-        // strange, not work
-        // var btNot = btMenu.cloneNode(true)
-        // var originSvg = btNot.querySelector("svg")
-        // var parent = originSvg.parentElement
-        // var svg = this._createSvg()
-        // parent.appendChild(svg)
-
         var button = document.createElement("button");
         button.setAttribute("class", "style-scope yt-icon-button")
-        button.style.color = 'red';
-        button.appendChild(this._createSvg())
 
+        var svg = this._createSvg()
+        svg.setAttribute("id", SVG_ID)
+        button.appendChild(svg)
         return button
     }
 }
 
 function getDetails() {
-    console.log("getDetails called")
     var details = Array.from(document.querySelectorAll("ytd-rich-grid-media div .style-scope.ytd-rich-grid-media"))
     details = details.filter(d => d.id == "details")
     return details
