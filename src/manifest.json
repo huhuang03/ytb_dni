@@ -7,7 +7,8 @@
     "content_scripts": [
         {
             "matches": ["https://www.youtube.com/"],
-            "js": ["add_not_interested.js"]
+            "js": ["add_not_interested.js"],
+            "run_at": "document_end"
         }
     ],
 

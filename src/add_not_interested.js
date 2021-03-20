@@ -132,3 +132,8 @@ var items = details.map(d => new Item(d))
 // var item = items[0]
 // var root = item.root
 // console.log(root)
+
+
+chrome.webRequest.onBeforeRequest.addListener(() => {
+    console.log('on web Request')
+})
