@@ -15,20 +15,27 @@ function addCss() {
 
 addCss()
 
+/**
+ * 每个item就是一个要处理的是视频item
+ */
 class Item {
     constructor(root) {
+        /**
+         * root为视频介绍的根节点。
+         */
         this.root = root
         this.init()
     }
 
     init() {
+        // offsetWidth > 0 表示视图已经加载完成了。
         this.canAddBt = this.root.offsetWidth > 0
-        if (this.canAddBt) {
-            // 还没加载完
 
+        if (this.canAddBt) {
             this.waitAndDo(() => {
                 this.frontMentuContainer = this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
-                this.hasAdded = this.frontMentuContainer.style.flexDirection
+                // 处理完之后会将此值改为 "column"。如果修改过。则不会重复修改了
+                this.hasAdded = this.frontMentuContainer.style.flexDirection == "column"
 
                 if (!this.hasAdded) {
                     this.frontMentuContainer.style.flexDirection = "column"
@@ -57,6 +64,7 @@ class Item {
     }
 
 
+    // 不断调用checkFunc。一旦返回ture，则调用func
     waitAndDo(func, checkFunc, timeout, checkInterval = 50) {
         var startTime = new Date().getTime()
         this._innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval)
@@ -75,6 +83,7 @@ class Item {
         }, 10)
     }
 
+    // 创建svg。即那个圆圈中加一杠图案
     _createSvg() {
         function getNode(n, v) {
             n = document.createElementNS("http://www.w3.org/2000/svg", n);
