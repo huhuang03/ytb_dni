@@ -137,6 +137,7 @@ function run() {
 }
 
 setInterval(() => {
+    console.error("setInterval called")
     run()
 }, 10000)
 
