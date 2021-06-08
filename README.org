@@ -1,3 +1,7 @@
 * TODOS
 - handle data load.
 - add pay method.
+- It is written very poorly, for example it uses timers instead of mutationObservers.
+
+* Links
+https://chrome.google.com/webstore/detail/trash-youtube-recommendat/dkomodiphnbnnfaokdokdjejjgafoffi?hl=zh-CN&authuser=0

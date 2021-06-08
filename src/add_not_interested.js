@@ -62,7 +62,7 @@ class Item {
             if (checkFunc()) {
                 func()
             } else if ((new Date().getTime() - startTime) < timeout) {
-                this._innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval)        
+                this._innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval)
             }
         }, checkInterval)
     }
@@ -110,7 +110,7 @@ class Item {
         svg.appendChild(g)
 
         var path1 = getNode("path", {d: 'M0 0h24v24H0z', fill: 'none', class: 'style-scope yt-icon'})
-        var path2 = getNode("path", {d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z', 
+        var path2 = getNode("path", {d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z',
             class: 'style-scope yt-icon'})
         g.appendChild(path1)
         g.appendChild(path2)
@@ -129,25 +129,33 @@ class Item {
 }
 
 function getDetails() {
-    var details = Array.from(document.querySelectorAll("ytd-rich-grid-media div .style-scope.ytd-rich-grid-media"))
+    let details = Array.from(document.querySelectorAll("ytd-rich-grid-media div .style-scope.ytd-rich-grid-media"))
     details = details.filter(d => d.id == "details")
     return details
 }
 
-// new Item(details[0])
-// var item = items[0]
-// var root = item.root
-// console.log(root)
-
+function log() {
+    if (false) {
+        console.log.apply(null, arguments)
+    }
+}
 
 function run() {
-    var details = getDetails()
+    let details = getDetails()
     details.map(d => new Item(d))
 }
 
-setInterval(() => {
-    console.error("setInterval called")
-    run()
-}, 10000)
-
 run()
+
+let e_content = document.getElementById("contents")
+
+if (e_content) {
+    new MutationObserver(() => {
+        log("MutationObserver callback called")
+        run()
+    }).observe(e_content, {
+        childList: true,
+    })
+} else {
+    console.error("content is empty")
+}
