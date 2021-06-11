@@ -159,3 +159,5 @@ if (e_content) {
 } else {
     console.error("content is empty")
 }
+
+console.log("add_not_interested.js called.")

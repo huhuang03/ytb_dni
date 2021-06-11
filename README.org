@@ -5,3 +5,5 @@
 
 * Links
 https://chrome.google.com/webstore/detail/trash-youtube-recommendat/dkomodiphnbnnfaokdokdjejjgafoffi?hl=zh-CN&authuser=0
+
+https://stackoverflow.com/questions/20865581/chrome-extension-content-script-not-loaded-until-page-is-refreshed
