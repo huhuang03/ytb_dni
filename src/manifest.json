@@ -18,5 +18,13 @@
         "48": "ic_not_interested_48.png",
         "128": "ic_not_interested_128.png"
     },
-    "options_page": "options.html"
+    "options_page": "options.html",
+
+    "background": {
+        "service_worker": "background.js"
+    },
+
+    "permissions": [
+        "https://www.youtube.com/", "tabs", "webNavigation"
+    ]
 }

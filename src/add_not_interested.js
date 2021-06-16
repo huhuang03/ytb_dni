@@ -2,8 +2,8 @@ const SVG_ID = "not_interested_svg"
 
 function addCss() {
     // add css
-    var fillColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-inactive))'
-    var fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon))'
+    const fillColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-inactive))';
+    const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon))';
 
     var css = `#${SVG_ID}:hover {fill: ${fillHoverColor}}\n #${SVG_ID} {fill: ${fillColor}}`
     // var css = `#${SVG_ID}:hover {fill: #606060}\n #${SVG_ID} {fill: #8b8b8b}`
