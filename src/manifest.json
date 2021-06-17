@@ -25,6 +25,10 @@
     },
 
     "permissions": [
-        "https://www.youtube.com/", "tabs", "webNavigation"
+        "tabs", "webNavigation", "scripting"
+    ],
+
+    "host_permissions": [
+        "https://www.youtube.com/"
     ]
 }
