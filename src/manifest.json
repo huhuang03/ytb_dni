@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "ytb not-interested button",
     "description": "add the not-interest butotn to video.",
-    "version": "0.0.3",
+    "version": "0.0.5",
 
     "content_scripts": [
         {
@@ -25,7 +25,7 @@
     },
 
     "permissions": [
-        "tabs", "webNavigation", "scripting"
+        "webNavigation", "scripting"
     ],
 
     "host_permissions": [
