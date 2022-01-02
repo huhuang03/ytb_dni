@@ -2,12 +2,12 @@ let SVG_ID = "not_interested_svg"
 
 function addCss() {
     // add css
-    const fillColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-inactive))';
-    const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon))';
+    const fillColor = 'let(--ytd-menu-renderer-button-color, let(--yt-spec-icon-inactive))';
+    const fillHoverColor = 'let(--ytd-menu-renderer-button-color, let(--yt-spec-icon))';
 
-    var css = `#${SVG_ID}:hover {fill: ${fillHoverColor}}\n #${SVG_ID} {fill: ${fillColor}}`
-    // var css = `#${SVG_ID}:hover {fill: #606060}\n #${SVG_ID} {fill: #8b8b8b}`
-    var style = document.createElement('style');
+    let css = `#${SVG_ID}:hover {fill: ${fillHoverColor}}\n #${SVG_ID} {fill: ${fillColor}}`;
+    // let css = `#${SVG_ID}:hover {fill: #606060}\n #${SVG_ID} {fill: #8b8b8b}`
+    let style = document.createElement('style');
 
     if (style.styleSheet) {
         style.styleSheet.cssText = css;
@@ -45,7 +45,7 @@ class Item {
                     this.frontMentuContainer.style.flexDirection = "column"
                     this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
 
-                    var button = this.createButton(this.btMenu)
+                    let button = this.createButton(this.btMenu)
                     button.onclick = () => {
                         this.doNotInterest()
                     }
@@ -70,7 +70,7 @@ class Item {
 
     // 不断调用checkFunc。一旦返回ture，则调用func
     waitAndDo(func, checkFunc, timeout, checkInterval = 50) {
-        var startTime = new Date().getTime()
+        let startTime = new Date().getTime()
         this._innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval)
     }
 
@@ -91,26 +91,26 @@ class Item {
     _createSvg() {
         function getNode(n, v) {
             n = document.createElementNS("http://www.w3.org/2000/svg", n);
-            for (var p in v)
+            for (let p in v)
                 n.setAttributeNS(null, p.replace(/[A-Z]/g, function(m, p, o, s) { return "-" + m.toLowerCase(); }), v[p]);
             return n
         }
 
-        var width = 24
-        var height = width
+        let width = 24
+        let height = width
 
-        var svg = getNode("svg", {width: width, height: height});
-        var padding = 2
+        let svg = getNode("svg", {width: width, height: height});
+        let padding = 2
         svg.setAttribute('viewBox', `-${padding} -${padding} ${width + padding * 2} ${height + padding * 2}`)
         svg.setAttribute('preserveAspectRatio', 'xMidYMid meet')
         document.body.insertBefore(svg, document.body.firstChild);
 
 
-        var g = getNode('g', {class: ''});
+        let g = getNode('g', {class: ''});
         svg.appendChild(g)
 
-        var path1 = getNode("path", {d: 'M0 0h24v24H0z', fill: 'none', class: 'style-scope yt-icon'})
-        var path2 = getNode("path", {d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z',
+        let path1 = getNode("path", {d: 'M0 0h24v24H0z', fill: 'none', class: 'style-scope yt-icon'})
+        let path2 = getNode("path", {d: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8 0-1.85.63-3.55 1.69-4.9L16.9 18.31C15.55 19.37 13.85 20 12 20zm6.31-3.1L7.1 5.69C8.45 4.63 10.15 4 12 4c4.42 0 8 3.58 8 8 0 1.85-.63 3.55-1.69 4.9z',
             class: 'style-scope yt-icon'})
         g.appendChild(path1)
         g.appendChild(path2)
@@ -118,10 +118,10 @@ class Item {
     }
 
     createButton(btMenu) {
-        var button = document.createElement("button");
+        let button = document.createElement("button");
         button.setAttribute("class", "style-scope yt-icon-button")
 
-        var svg = this._createSvg()
+        let svg = this._createSvg()
         svg.setAttribute("id", SVG_ID)
         button.appendChild(svg)
         return button
