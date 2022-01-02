@@ -147,6 +147,20 @@ function run() {
     details.map(d => new Item(d))
 }
 
+function _getContentElement(content_elements) {
+    if (!content_elements || content_elements.length === 0) {
+        return undefined;
+    }
+    if (content_elements && content_elements.length > 0) {
+        for (let ele of content_elements) {
+            if (ele.clientWidth) {
+                return ele
+            }
+        }
+    }
+    return undefined;
+}
+
 function _initial() {
     run()
     log("window._has_add_ytb_dni", window._has_add_ytb_dni)
@@ -155,19 +169,16 @@ function _initial() {
         // 如果是从详情点击图片返回的，有两个contents
         // <div id="contents" class="style-scope ytd-item-section-renderer"></div>
         let e_contents = document.querySelectorAll("[id=contents]")
-        if (e_contents && e_contents.length > 0) {
-            let e_content = e_contents[e_contents.length - 1]
-
-            if (e_content) {
-                new MutationObserver(() => {
-                    log("MutationObserver callback called")
-                    run()
-                }).observe(e_content, {
-                    childList: true,
-                })
-            }
-        } else {
-            console.error("content is empty")
+        const e_content = _getContentElement(e_contents)
+        if (e_content) {
+            // not work anymore. why?
+            console.log('set MutationObserver called')
+            new MutationObserver(() => {
+                log("MutationObserver callback called")
+                run()
+            }).observe(e_content, {
+                childList: true,
+            })
         }
     }
 
