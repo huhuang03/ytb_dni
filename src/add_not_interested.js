@@ -130,7 +130,7 @@ class Item {
 
 function getDetails() {
     let details = Array.from(document.querySelectorAll("ytd-rich-grid-media div .style-scope.ytd-rich-grid-media"))
-    details = details.filter(d => d.id == "details")
+    details = details.filter(d => d.id === "details")
     return details
 }
 
