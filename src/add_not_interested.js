@@ -79,13 +79,32 @@ class Item {
         this.btMenu.click()
         setTimeout(() => {
             this.popup_menu_items = document.querySelectorAll("ytd-menu-service-item-renderer")
-            if (this.popup_menu_items.length >= 6) {
-                this.popup_menu_items[3].click()
-            } else if (this.popup_menu_items.length == 1) {
-                this.popup_menu_items[0].click()
-                console.log(this.popup_menu_items[0])
+
+            // svg path: M18.71 6C20.13 7.59 21 9.69 21 12c0 4.97-4.03 9-9 9-2.31 0-4.41-.87-6-2.29L18.71 6zM3 12c0-4.97 4.03-9 9-9 2.31 0 4.41.87 6 2.29L5.29 18C3.87 16.41 3 14.31 3 12zm9-10c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z
+            // maybe use the svg path is better?
+            function getDNIElement(popup_menu_items) {
+                console.log("popup_menu_items: ", popup_menu_items)
+                if (popup_menu_items == null) return null;
+
+                if (popup_menu_items.length == 1) {
+                    return popup_menu_items[0]
+                    // 目前有两种情况，6个和7个，都是倒数第三个为我们要找的item
+                } else if (popup_menu_items.length >= 3) {
+                    return popup_menu_items[popup_menu_items.length - 3]
+                }
+                return null;
             }
-        }, 10)
+            const ele = getDNIElement(this.popup_menu_items);
+            if (ele != null) {
+                ele.click()
+            }
+            // if (this.popup_menu_items.length >= 6) {
+            //     this.popup_menu_items[3].click()
+            // } else if (this.popup_menu_items.length == 1) {
+            //     this.popup_menu_items[0].click()
+            //     console.log(this.popup_menu_items[0])
+            // }
+        }, 3)
     }
 
     // 创建svg。即那个圆圈中加一杠图案
