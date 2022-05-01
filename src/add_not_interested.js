@@ -1,4 +1,5 @@
-let SVG_ID = "not_interested_svg"
+// how to avoid redefine?
+var SVG_ID = "not_interested_svg"
 
 // 不断调用checkFunc。一旦返回ture，则调用func
 function waitAndDo(func, checkFunc, timeout, checkInterval = 50) {
@@ -48,7 +49,46 @@ class DniContainer extends EleWrapper {
             this.dni = new DNI()
             this.ele.append(this.dni.ele)
         }
+    }
 
+    setMenu(menuFinder) {
+        if (this.dni == null) {
+            return;
+        }
+
+        // why dni is null??
+        this.dni.ele.onclick = () => {
+            this._doNotInterest(menuFinder)
+        }
+    }
+
+    _doNotInterest(menuFinder) {
+        const btMenu = menuFinder()
+        log("btMenu:")
+        log(btMenu)
+        btMenu.click()
+
+        setTimeout(() => {
+            const popup_menu_items = document.querySelectorAll("ytd-menu-service-item-renderer")
+
+            function getDNIElement(popup_menu_items) {
+                log("popup_menu_items: ", popup_menu_items)
+                if (popup_menu_items == null) return null;
+
+                if (popup_menu_items.length == 1) {
+                    return popup_menu_items[0]
+                    // 目前有两种情况，6个和7个，都是倒数第三个为我们要找的item
+                } else if (popup_menu_items.length >= 3) {
+                    return popup_menu_items[popup_menu_items.length - 3]
+                }
+                return null;
+            }
+
+            const ele = getDNIElement(popup_menu_items);
+            if (ele != null) {
+                ele.click()
+            }
+        }, 3)
     }
 
 }
@@ -116,7 +156,8 @@ class PreviewMenu {
             return
         }
 
-        new DniContainer(containerEle)
+        const dniContainer = new DniContainer(containerEle)
+        dniContainer.setMenu(() => containerEle.querySelector("yt-icon-button.dropdown-trigger").querySelector("#button"))
     }
 
     _getContainer() {
@@ -161,42 +202,17 @@ class Item {
                 console.log(menuContainer)
                 const dniContainer = new DniContainer(menuContainer);
 
-                dniContainer.dni.ele.onclick = () => {
-                    this.doNotInterest()
-                }
+                // const btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
+                dniContainer.setMenu(() => this.root.querySelector("button.style-scope.yt-icon-button"))
+                // dniContainer.dni.ele.onclick = () => {
+                //     this.doNotInterest()
+                // }
             }, () => {
                 return this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
             }, 4000)
         }
     }
 
-
-    doNotInterest() {
-        const btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
-        log("menu: ")
-        console.log(btMenu)
-        btMenu.click()
-        setTimeout(() => {
-            this.popup_menu_items = document.querySelectorAll("ytd-menu-service-item-renderer")
-
-            function getDNIElement(popup_menu_items) {
-                log("popup_menu_items: ", popup_menu_items)
-                if (popup_menu_items == null) return null;
-
-                if (popup_menu_items.length == 1) {
-                    return popup_menu_items[0]
-                    // 目前有两种情况，6个和7个，都是倒数第三个为我们要找的item
-                } else if (popup_menu_items.length >= 3) {
-                    return popup_menu_items[popup_menu_items.length - 3]
-                }
-                return null;
-            }
-            const ele = getDNIElement(this.popup_menu_items);
-            if (ele != null) {
-                ele.click()
-            }
-        }, 3)
-    }
 
 }
 
@@ -217,12 +233,18 @@ function run() {
     details.map(d => new Item(d))
 
     setTimeout(() => {
+        // 这里可能有错误啊
         const preview = document.getElementById("preview")
+        // how to handle this?
+        // the menu is not ready!
         const menu = preview.querySelector("#menu")
-
+        if (menu == null) {
+            return;
+        }
 
         const handlePreviewChange = function(mutationsList, observer) {
             log("hanldePeviewChange called ----------")
+
             for (mutation of mutationsList) {
                 log("mutation: " + mutation.type)
                 // how do you think??
@@ -234,7 +256,7 @@ function run() {
         
         const observer = new MutationObserver(handlePreviewChange);
         observer.observe(menu, {childList: true})
-    }, 0)
+    }, 1000)
 }
 
 function _getContentElement(content_elements) {
@@ -285,7 +307,6 @@ function _addCss() {
     // const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon))';
     const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-active-other))';
 
-    // width: var(--yt-icon-width);height: var(--yt-icon-height);
     let css = `#${SVG_ID}:hover {fill: ${fillHoverColor}}\n #${SVG_ID} {fill: ${fillColor};}`;
     // let css = `#${SVG_ID}:hover {fill: #606060}\n #${SVG_ID} {fill: #8b8b8b}`
     let style = document.createElement('style');
@@ -299,4 +320,3 @@ function _addCss() {
 }
 
 _addCss()
-
