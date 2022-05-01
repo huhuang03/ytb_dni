@@ -1,110 +1,75 @@
 let SVG_ID = "not_interested_svg"
 
-function addCss() {
-    // add css
-    const fillColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-inactive))';
-    // const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon))';
-    const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-active-other))';
-
-    let css = `#${SVG_ID}:hover {fill: ${fillHoverColor}}\n #${SVG_ID} {fill: ${fillColor}}`;
-    // let css = `#${SVG_ID}:hover {fill: #606060}\n #${SVG_ID} {fill: #8b8b8b}`
-    let style = document.createElement('style');
-
-    if (style.styleSheet) {
-        style.styleSheet.cssText = css;
-    } else {
-        style.appendChild(document.createTextNode(css));
-    }
-    document.getElementsByTagName('head')[0].appendChild(style);
+// 不断调用checkFunc。一旦返回ture，则调用func
+function waitAndDo(func, checkFunc, timeout, checkInterval = 50) {
+    let startTime = new Date().getTime()
+    _waitAndDoOnce(startTime, func, checkFunc, timeout, checkInterval)
 }
 
-addCss()
+function _waitAndDoOnce(startTime, func, checkFunc, timeout, checkInterval) {
+    setTimeout(() => {
+        if (checkFunc()) {
+            func()
+        } else if ((new Date().getTime() - startTime) < timeout) {
+            _waitAndDoOnce(startTime, func, checkFunc, timeout, checkInterval)
+        }
+    }, checkInterval)
+}
+
+class EleWrapper {
+    constructor(ele) {
+        this.ele = ele
+    }
+}
 
 /**
- * 每个item就是一个要处理的是视频item
+ * This DniContainer is the direct container of DNI
+ * 
+ * And for now, it mantians flexDirection.
+ * 
+ * it's ele is the dni parent.
  */
-class Item {
-    constructor(root) {
-        /**
-         * root为视频介绍的根节点。
-         */
-        this.root = root
-        this.init()
+class DniContainer extends EleWrapper {
+    constructor(ele) {
+        super(ele)
+        this.dni = null
+        this._init()
+        console.log("container ele: " + ele)
     }
 
-    init() {
-        // offsetWidth > 0 表示视图已经加载完成了。
-        this.canAddBt = this.root.offsetWidth > 0
+    _init() {
+        // 处理完之后会将此值改为 "column"。如果修改过。则不会重复修改了
+        this.hasAdded = this.ele.style.flexDirection == "column"
 
-        if (this.canAddBt) {
-            this.waitAndDo(() => {
-                this.frontMentuContainer = this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
-                // 处理完之后会将此值改为 "column"。如果修改过。则不会重复修改了
-                this.hasAdded = this.frontMentuContainer.style.flexDirection == "column"
+        if (!this.hasAdded) {
+            // how to reuse this tecnic?
+            this.ele.style.flexDirection = "column"
 
-                if (!this.hasAdded) {
-                    this.frontMentuContainer.style.flexDirection = "column"
-                    this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
-
-                    let button = this.createButton(this.btMenu)
-                    button.onclick = () => {
-                        this.doNotInterest()
-                    }
-                    this.frontMentuContainer.append(button)
-                }
-            }, () => {
-                return this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
-            }, 4000)
+            this.dni = new DNI()
+            this.ele.append(this.dni.ele)
         }
+
     }
 
-    _innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval) {
-        setTimeout(() => {
-            if (checkFunc()) {
-                func()
-            } else if ((new Date().getTime() - startTime) < timeout) {
-                this._innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval)
-            }
-        }, checkInterval)
+}
+
+class DNI extends EleWrapper {
+    // how do you do this?
+    constructor() {
+        super(null)
+        this.ele = this._createDniButton()
     }
 
+    // it's something not interesting??
+    _createDniButton() {
+        let button = document.createElement("button");
+        button.setAttribute("class", "style-scope yt-icon-button ytd-menu-renderer")
+        // button.setAttribute("style-target", "button")
 
-    // 不断调用checkFunc。一旦返回ture，则调用func
-    waitAndDo(func, checkFunc, timeout, checkInterval = 50) {
-        let startTime = new Date().getTime()
-        this._innerWaitAndDo(startTime, func, checkFunc, timeout, checkInterval)
-    }
-
-    doNotInterest() {
-        this.btMenu.click()
-        setTimeout(() => {
-            this.popup_menu_items = document.querySelectorAll("ytd-menu-service-item-renderer")
-
-            // svg path: M18.71 6C20.13 7.59 21 9.69 21 12c0 4.97-4.03 9-9 9-2.31 0-4.41-.87-6-2.29L18.71 6zM3 12c0-4.97 4.03-9 9-9 2.31 0 4.41.87 6 2.29L5.29 18C3.87 16.41 3 14.31 3 12zm9-10c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z
-            // maybe use the svg path is better?
-            function getDNIElement(popup_menu_items) {
-                console.log("popup_menu_items: ", popup_menu_items)
-                if (popup_menu_items == null) return null;
-
-                if (popup_menu_items.length == 1) {
-                    return popup_menu_items[0]
-                    // 目前有两种情况，6个和7个，都是倒数第三个为我们要找的item
-                } else if (popup_menu_items.length >= 3) {
-                    return popup_menu_items[popup_menu_items.length - 3]
-                }
-                return null;
-            }
-            const ele = getDNIElement(this.popup_menu_items);
-            if (ele != null) {
-                ele.click()
-            }
-            // if (this.popup_menu_items.length >= 6) {
-            //     this.popup_menu_items[3].click()
-            // } else if (this.popup_menu_items.length == 1) {
-            //     this.popup_menu_items[0].click()
-            //     console.log(this.popup_menu_items[0])
-            // }
-        }, 3)
+        let svg = this._createSvg()
+        svg.setAttribute("id", SVG_ID)
+        button.appendChild(svg)
+        return button
     }
 
     // 创建svg。即那个圆圈中加一杠图案
@@ -136,16 +101,102 @@ class Item {
         g.appendChild(path2)
         return svg
     }
+}
 
-    createButton(btMenu) {
-        let button = document.createElement("button");
-        button.setAttribute("class", "style-scope yt-icon-button")
 
-        let svg = this._createSvg()
-        svg.setAttribute("id", SVG_ID)
-        button.appendChild(svg)
-        return button
+class PreviewMenu {
+    constructor(root) {
+        this.root = root
+        this._init()
     }
+
+    _init() {
+        const containerEle = this._getContainer();
+        if (containerEle == null) {
+            return
+        }
+
+        new DniContainer(containerEle)
+    }
+
+    _getContainer() {
+        // how do you think of this?
+        const containers = this.root.getElementsByTagName("ytd-menu-renderer")
+        log("containers: " + containers)
+        if (containers != null && containers.length > 0) {
+            return containers[0]
+        }
+        return null
+    }
+}
+
+// can I split to some method
+// can I do some helper method?
+// split change and unchange.
+// I think the dni is unot change.
+
+/**
+ * 每个item就是一个要处理的是视频item
+ */
+class Item {
+    constructor(root) {
+        /**
+         * root为视频介绍的根节点。
+         */
+        this.root = root
+        this._init()
+// this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
+// this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
+        this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
+    }
+
+    _init() {
+        // get child??
+        // offsetWidth > 0 表示视图已经加载完成了。
+        this.canAddBt = this.root.offsetWidth > 0
+
+        if (this.canAddBt) {
+            waitAndDo(() => {
+                const menuContainer = this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
+                console.log(menuContainer)
+                const dniContainer = new DniContainer(menuContainer);
+
+                dniContainer.dni.ele.onclick = () => {
+                    this.doNotInterest()
+                }
+                
+            }, () => {
+                return this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
+            }, 4000)
+        }
+    }
+
+
+    doNotInterest() {
+        log("menu: " + this.btMenu)
+        this.btMenu.click()
+        setTimeout(() => {
+            this.popup_menu_items = document.querySelectorAll("ytd-menu-service-item-renderer")
+
+            function getDNIElement(popup_menu_items) {
+                log("popup_menu_items: ", popup_menu_items)
+                if (popup_menu_items == null) return null;
+
+                if (popup_menu_items.length == 1) {
+                    return popup_menu_items[0]
+                    // 目前有两种情况，6个和7个，都是倒数第三个为我们要找的item
+                } else if (popup_menu_items.length >= 3) {
+                    return popup_menu_items[popup_menu_items.length - 3]
+                }
+                return null;
+            }
+            const ele = getDNIElement(this.popup_menu_items);
+            if (ele != null) {
+                ele.click()
+            }
+        }, 3)
+    }
+
 }
 
 function getDetails() {
@@ -162,14 +213,34 @@ function log() {
 
 function run() {
     let details = getDetails()
-    log("details: ", details)
     details.map(d => new Item(d))
+
+    setTimeout(() => {
+        const preview = document.getElementById("preview")
+        const menu = preview.querySelector("#menu")
+
+
+        const handlePreviewChange = function(mutationsList, observer) {
+            log("hanldePeviewChange called ----------")
+            for (mutation of mutationsList) {
+                log("mutation: " + mutation.type)
+                // how do you think??
+                setTimeout(() => {
+                    new PreviewMenu(menu)
+                }, 0);
+            }
+        }
+        
+        const observer = new MutationObserver(handlePreviewChange);
+        observer.observe(menu, {childList: true})
+    }, 0)
 }
 
 function _getContentElement(content_elements) {
     if (!content_elements || content_elements.length === 0) {
         return undefined;
     }
+    
     if (content_elements && content_elements.length > 0) {
         for (let ele of content_elements) {
             if (ele.clientWidth) {
@@ -205,3 +276,26 @@ function _initial() {
 }
 
 setTimeout(_initial, 0)
+
+// this will not change!!
+function _addCss() {
+    // add css
+    const fillColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-inactive))';
+    // const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon))';
+    const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-active-other))';
+
+    // width: var(--yt-icon-width);height: var(--yt-icon-height);
+    let css = `#${SVG_ID}:hover {fill: ${fillHoverColor}}\n #${SVG_ID} {fill: ${fillColor};}`;
+    // let css = `#${SVG_ID}:hover {fill: #606060}\n #${SVG_ID} {fill: #8b8b8b}`
+    let style = document.createElement('style');
+
+    if (style.styleSheet) {
+        style.styleSheet.cssText = css;
+    } else {
+        style.appendChild(document.createTextNode(css));
+    }
+    document.getElementsByTagName('head')[0].appendChild(style);
+}
+
+_addCss()
+

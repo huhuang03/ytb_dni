@@ -15,10 +15,5 @@ chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
                 console.error(err)
             });
         }, 2500)
-        // console.log(details)
-        // // console.log(chrome.tabs)
-        // // 目前没有什么办法，先延时吧
-        // Promise.delay(3000).then(() => {
-        // })
     }
 });
