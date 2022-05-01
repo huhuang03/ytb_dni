@@ -35,7 +35,6 @@ class DniContainer extends EleWrapper {
         super(ele)
         this.dni = null
         this._init()
-        console.log("container ele: " + ele)
     }
 
     _init() {
@@ -64,15 +63,12 @@ class DniContainer extends EleWrapper {
 
     _doNotInterest(menuFinder) {
         const btMenu = menuFinder()
-        log("btMenu:")
-        log(btMenu)
         btMenu.click()
 
         setTimeout(() => {
             const popup_menu_items = document.querySelectorAll("ytd-menu-service-item-renderer")
 
             function getDNIElement(popup_menu_items) {
-                log("popup_menu_items: ", popup_menu_items)
                 if (popup_menu_items == null) return null;
 
                 if (popup_menu_items.length == 1) {
@@ -146,7 +142,7 @@ class DNI extends EleWrapper {
 
 class PreviewMenu {
     constructor(root) {
-        this.root = root
+        this.ele = root
         this._init()
     }
 
@@ -162,7 +158,7 @@ class PreviewMenu {
 
     _getContainer() {
         // how do you think of this?
-        const containers = this.root.getElementsByTagName("ytd-menu-renderer")
+        const containers = this.ele.getElementsByTagName("ytd-menu-renderer")
         log("containers: " + containers)
         if (containers != null && containers.length > 0) {
             return containers[0]
@@ -179,36 +175,29 @@ class PreviewMenu {
 /**
  * 每个item就是一个要处理的是视频item
  */
-class Item {
-    constructor(root) {
-        /**
-         * root为视频介绍的根节点。
-         */
-        this.root = root
+class Item extends EleWrapper{
+    constructor(ele) {
+        super(ele)
         this._init()
-// this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
-// this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
-// why you are none?
     }
 
     _init() {
         // get child??
         // offsetWidth > 0 表示视图已经加载完成了。
-        this.canAddBt = this.root.offsetWidth > 0
+        this.canAddBt = this.ele.offsetWidth > 0
 
         if (this.canAddBt) {
             waitAndDo(() => {
-                const menuContainer = this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
-                console.log(menuContainer)
+                const menuContainer = this.ele.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
                 const dniContainer = new DniContainer(menuContainer);
 
-                // const btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
-                dniContainer.setMenu(() => this.root.querySelector("button.style-scope.yt-icon-button"))
+                // const btMenu = this.ele.querySelector("button.style-scope.yt-icon-button")
+                dniContainer.setMenu(() => this.ele.querySelector("button.style-scope.yt-icon-button"))
                 // dniContainer.dni.ele.onclick = () => {
                 //     this.doNotInterest()
                 // }
             }, () => {
-                return this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
+                return this.ele.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
             }, 4000)
         }
     }
@@ -222,6 +211,10 @@ function getDetails() {
     return details
 }
 
+function logw() {
+    console.log.apply(null, arguments)
+}
+
 function log() {
     if (true) {
         console.log.apply(null, arguments)
@@ -230,8 +223,16 @@ function log() {
 
 function run() {
     let details = getDetails()
+    log("details len: " + details.length)
     details.map(d => new Item(d))
+}
 
+function _initPreview() {
+    if (window._has_init_preview) {
+        return;
+    }
+
+    window._has_init_preview = true;
     setTimeout(() => {
         // 这里可能有错误啊
         const preview = document.getElementById("preview")
@@ -239,10 +240,10 @@ function run() {
         // the menu is not ready!
         const menu = preview.querySelector("#menu")
         if (menu == null) {
-            return;
+            return
         }
 
-        const handlePreviewChange = function(mutationsList, observer) {
+        const handlePreviewChange = function (mutationsList, observer) {
             log("hanldePeviewChange called ----------")
 
             for (mutation of mutationsList) {
@@ -250,22 +251,23 @@ function run() {
                 // how do you think??
                 setTimeout(() => {
                     new PreviewMenu(menu)
-                }, 0);
+                }, 0)
             }
         }
-        
-        const observer = new MutationObserver(handlePreviewChange);
-        observer.observe(menu, {childList: true})
+
+        const observer = new MutationObserver(handlePreviewChange)
+        observer.observe(menu, { childList: true })
     }, 1000)
 }
 
-function _getContentElement(content_elements) {
-    if (!content_elements || content_elements.length === 0) {
+function _getContentElement() {
+    let contents = document.querySelectorAll("[id=contents]")
+    if (!contents || contents.length === 0) {
         return undefined;
     }
     
-    if (content_elements && content_elements.length > 0) {
-        for (let ele of content_elements) {
+    if (contents && contents.length > 0) {
+        for (let ele of contents) {
             if (ele.clientWidth) {
                 return ele
             }
@@ -274,32 +276,48 @@ function _getContentElement(content_elements) {
     return undefined;
 }
 
-function _initial() {
+function _initItems() {
     run()
-    log("window._has_add_ytb_dni", window._has_add_ytb_dni)
-    if (!window._has_add_ytb_dni) {
-        window._has_add_ytb_dni = true
+    const e_content = _getContentElement()
+    if (e_content) {
+        // not work anymore. why?
+        console.log('set MutationObserver called')
+        new MutationObserver(() => {
+            log("MutationObserver callback called")
+            run()
+        }).observe(e_content, {
+            childList: true,
+        })
+    } else {
+        logw("why content is null??")
+    }
+}
+
+// some things it's too early this get called. 
+// should wait for the content is ready!!
+function _initial() {
+    log("_initial caleld")
+    if (window._has_add_ytb_dni) {
+        logw("ytb has already initialed!!")
+        return
         // 如果是从详情点击图片返回的，有两个contents
         // <div id="contents" class="style-scope ytd-item-section-renderer"></div>
-        let e_contents = document.querySelectorAll("[id=contents]")
-        const e_content = _getContentElement(e_contents)
-        if (e_content) {
-            // not work anymore. why?
-            console.log('set MutationObserver called')
-            new MutationObserver(() => {
-                log("MutationObserver callback called")
-                run()
-            }).observe(e_content, {
-                childList: true,
-            })
-        }
     }
+    window._has_add_ytb_dni = true
 
-    console.log("add_not_interested.js called.")
+    _initPreview()
+
+    // ok how to do this?
+    waitAndDo(() => {
+        _initItems()
+    }, () => {
+        return _getContentElement() != null && getDetails().length > 0
+    }, 4000, 500)
 }
 
 setTimeout(_initial, 0)
 
+// can you inject css not like this!!
 // this will not change!!
 function _addCss() {
     // add css
