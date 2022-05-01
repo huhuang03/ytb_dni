@@ -147,7 +147,7 @@ class Item {
         this._init()
 // this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
 // this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
-        this.btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
+// why you are none?
     }
 
     _init() {
@@ -164,7 +164,6 @@ class Item {
                 dniContainer.dni.ele.onclick = () => {
                     this.doNotInterest()
                 }
-                
             }, () => {
                 return this.root.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
             }, 4000)
@@ -173,8 +172,10 @@ class Item {
 
 
     doNotInterest() {
-        log("menu: " + this.btMenu)
-        this.btMenu.click()
+        const btMenu = this.root.querySelector("button.style-scope.yt-icon-button")
+        log("menu: ")
+        console.log(btMenu)
+        btMenu.click()
         setTimeout(() => {
             this.popup_menu_items = document.querySelectorAll("ytd-menu-service-item-renderer")
 
