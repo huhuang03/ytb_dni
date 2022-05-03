@@ -216,7 +216,7 @@ function logw() {
 }
 
 function log() {
-    if (true) {
+    if (false) {
         console.log.apply(null, arguments)
     }
 }
