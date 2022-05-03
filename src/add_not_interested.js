@@ -216,7 +216,7 @@ function logw() {
 }
 
 function log() {
-    if (false) {
+    if (true) {
         console.log.apply(null, arguments)
     }
 }
@@ -224,7 +224,11 @@ function log() {
 function run() {
     let details = getDetails()
     log("details len: " + details.length)
-    details.map(d => new Item(d))
+    details.map(d => {
+        if (isYtbHome()) {
+            new Item(d)
+        }
+    })
 }
 
 function _initPreview() {
@@ -281,7 +285,7 @@ function _initItems() {
     const e_content = _getContentElement()
     if (e_content) {
         // not work anymore. why?
-        console.log('set MutationObserver called')
+        log('set MutationObserver called')
         new MutationObserver(() => {
             log("MutationObserver callback called")
             // how to do this?
