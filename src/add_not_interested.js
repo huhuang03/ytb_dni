@@ -284,7 +284,10 @@ function _initItems() {
         console.log('set MutationObserver called')
         new MutationObserver(() => {
             log("MutationObserver callback called")
-            run()
+            // how to do this?
+            if (isYtbHome()) {
+                run()
+            }
         }).observe(e_content, {
             childList: true,
         })
@@ -297,12 +300,18 @@ function _initItems() {
 // should wait for the content is ready!!
 function _initial() {
     log("_initial caleld")
+    if (!isYtbHome()) {
+        log("is not ytb home, just return")
+        return
+    }
+
     if (window._has_add_ytb_dni) {
         logw("ytb has already initialed!!")
         return
-        // 如果是从详情点击图片返回的，有两个contents
-        // <div id="contents" class="style-scope ytd-item-section-renderer"></div>
     }
+
+    // 如果是从详情点击图片返回的，有两个contents
+    // <div id="contents" class="style-scope ytd-item-section-renderer"></div>
     window._has_add_ytb_dni = true
 
     _initPreview()
@@ -313,6 +322,12 @@ function _initial() {
     }, () => {
         return _getContentElement() != null && getDetails().length > 0
     }, 4000, 500)
+}
+
+function isYtbHome() {
+    const location = window.location
+    log("location1: " + location)
+    return location && (location.pathname == "/" || location.pathname == "")
 }
 
 setTimeout(_initial, 0)
