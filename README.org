@@ -1,4 +1,4 @@
-This is the source code fo the [[https://chrome.google.com/webstore/detail/ytb-not-interested-button/okfiigkfppbpfjaiffmllkkfbpdnhofn?hl=zh-CN&authuser=0][chrome ytb-interested button extension]].
+This is the source code fo the [[https://chrome.google.com/webstore/detail/ytb-not-interested-button/okfiigkfppbpfjaiffmllkkfbpdnhofn][chrome ytb-interested button extension]].
 
 * TODOS
 - it seems somethings not show: open a video, watch some times. Click ytb left top button, then don't show sometimes.
