@@ -3,3 +3,4 @@
 dist/
 *.zip
 .idea/
+node_modules/
