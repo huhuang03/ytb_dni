@@ -1,5 +1,5 @@
 // how to avoid redefine?
-var SVG_ID = "not_interested_svg"
+const SVG_ID = 'not_interested_svg';
 
 // 不断调用checkFunc。一旦返回ture，则调用func
 function waitAndDo(func, checkFunc, timeout, checkInterval = 50) {
@@ -24,13 +24,14 @@ class EleWrapper {
 }
 
 /**
- * This DniContainer is the direct container of DNI
- * 
+ * This MenuContainer is the direct container of DNI
+ *
  * And for now, it mantians flexDirection.
- * 
- * it's ele is the dni parent.
+ *
+ * its ele is the dni parent.
  */
-class DniContainer extends EleWrapper {
+class MenuContainer extends EleWrapper {
+    // ele is the menuContainer
     constructor(ele) {
         super(ele)
         this.dni = null
@@ -38,14 +39,14 @@ class DniContainer extends EleWrapper {
     }
 
     _init() {
-        // 处理完之后会将此值改为 "column"。如果修改过。则不会重复修改了
-        this.hasAdded = this.ele.style.flexDirection == "column"
+        this.hasAdded = this.ele.style.flexDirection === "column"
+        console.log("hasAdded: ", this.hasAdded);
 
         if (!this.hasAdded) {
-            // how to reuse this tecnic?
             this.ele.style.flexDirection = "column"
 
             this.dni = new DNI()
+            console.log("ele append: ", this.dni.ele);
             this.ele.append(this.dni.ele)
         }
     }
@@ -152,7 +153,7 @@ class PreviewMenu {
             return
         }
 
-        const dniContainer = new DniContainer(containerEle)
+        const dniContainer = new MenuContainer(containerEle)
         dniContainer.setMenu(() => containerEle.querySelector("yt-icon-button.dropdown-trigger").querySelector("#button"))
     }
 
@@ -185,17 +186,15 @@ class Item extends EleWrapper{
         // get child??
         // offsetWidth > 0 表示视图已经加载完成了。
         this.canAddBt = this.ele.offsetWidth > 0
+        console.log("_init called with: ", this.ele, ", offsetWidth: ", this.ele.offsetWidth, ', can addBt: ', this.canAddBt);
 
         if (this.canAddBt) {
             waitAndDo(() => {
                 const menuContainer = this.ele.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
-                const dniContainer = new DniContainer(menuContainer);
+                const dniContainer = new MenuContainer(menuContainer);
 
-                // const btMenu = this.ele.querySelector("button.style-scope.yt-icon-button")
                 dniContainer.setMenu(() => this.ele.querySelector("button.style-scope.yt-icon-button"))
-                // dniContainer.dni.ele.onclick = () => {
-                //     this.doNotInterest()
-                // }
+                console.log("menuContainer: ", menuContainer);
             }, () => {
                 return this.ele.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media") != null
             }, 4000)
@@ -216,14 +215,14 @@ function logw() {
 }
 
 function log() {
-    if (false) {
+    if (true) {
         console.log.apply(null, arguments)
     }
 }
 
 function run() {
     let details = getDetails()
-    log("details len: " + details.length)
+    log("details len: " + details.length, "is Ytb home: ", isYtbHome())
     details.map(d => {
         if (isYtbHome()) {
             new Item(d)
@@ -269,7 +268,7 @@ function _getContentElement() {
     if (!contents || contents.length === 0) {
         return undefined;
     }
-    
+
     if (contents && contents.length > 0) {
         for (let ele of contents) {
             if (ele.clientWidth) {
@@ -300,7 +299,7 @@ function _initItems() {
     }
 }
 
-// some things it's too early this get called. 
+// some things it's too early this get called.
 // should wait for the content is ready!!
 function _initial() {
     log("_initial caleld")
