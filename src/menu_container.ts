@@ -31,7 +31,6 @@ export class MenuContainer extends Ele_wrapper {
   }
 
   setMenu(menuFinder) {
-    console.log("setMenu called")
     if (this.dni == null) {
       return;
     }

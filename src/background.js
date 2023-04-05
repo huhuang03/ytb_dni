@@ -1,5 +1,3 @@
-console.log("hello from background")
-
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
     // console.log("onHistoryStateUpdated called")
     // ok, let do something.
