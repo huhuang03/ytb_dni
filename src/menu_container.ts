@@ -1,4 +1,4 @@
-import {Ele_wrapper} from './ele_wrapper';
+import {EleWrapper} from './ele_wrapper';
 import {DNI} from './dni';
 
 /**
@@ -8,7 +8,7 @@ import {DNI} from './dni';
  *
  * its ele is the dni parent.
  */
-export class MenuContainer extends Ele_wrapper {
+export class MenuContainer extends EleWrapper {
   dni: DNI
   hasAdded = false
 
@@ -41,30 +41,41 @@ export class MenuContainer extends Ele_wrapper {
     }
   }
 
+  _smart_check_once(): HTMLElement | null {
+    const popup_menu_items = document.querySelectorAll('ytd-menu-service-item-renderer')
+
+    for (const item of Array.from(popup_menu_items)) {
+      const path = item.querySelector('path')
+      if (path) {
+        const d = path.getAttribute('d')
+        //  M18.71 6C20.13 7.59 21 9.69 21 12c0 4.97-4.03 9-9 9-2.31 0-4.41-.87-6-2.29L18.71 6zM3 12c0-4.97 4.03-9 9-9 2.31 0 4.41.87 6 2.29L5.29 18C3.87 16.41 3 14.31 3 12zm9-10c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z
+        if (d && d.includes('6C20')) {
+          return item as HTMLElement
+        }
+      }
+    }
+    return null
+  }
+
   _doNotInterest(menuFinder) {
     const btMenu = menuFinder()
     btMenu.click()
+    let found = false
 
-    setTimeout(() => {
-      const popup_menu_items = document.querySelectorAll('ytd-menu-service-item-renderer')
-
-      function getDNIElement(popup_menu_items) {
-        if (popup_menu_items == null) return null;
-
-        if (popup_menu_items.length == 1) {
-          return popup_menu_items[0]
-          // 目前有两种情况，6个和7个，都是倒数第三个为我们要找的item
-        } else if (popup_menu_items.length >= 3) {
-          return popup_menu_items[popup_menu_items.length - 3]
-        }
-        return null;
+    const check = () => {
+      if (found) {
+        return
       }
-
-      const ele = getDNIElement(popup_menu_items);
-      if (ele != null) {
-        ele.click()
+      const findEle = this._smart_check_once()
+      if (findEle) {
+        found = true
+        findEle.click()
+      } else {
+        setTimeout(check, 20)
       }
-    }, 3)
+    }
+
+    setTimeout(check, 50)
   }
 
 }

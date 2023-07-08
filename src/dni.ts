@@ -1,7 +1,7 @@
-import {Ele_wrapper} from './ele_wrapper';
+import {EleWrapper} from './ele_wrapper';
 import {SVG_ID} from './constants';
 
-export class DNI extends Ele_wrapper {
+export class DNI extends EleWrapper {
   // how do you do this?
   constructor() {
     super(null)
@@ -12,7 +12,6 @@ export class DNI extends Ele_wrapper {
   _createDniButton() {
     let button = document.createElement('button');
     button.setAttribute('class', 'style-scope yt-icon-button ytd-menu-renderer')
-    // button.setAttribute("style-target", "button")
 
     let svg = this._createSvg()
     svg.setAttribute('id', SVG_ID)

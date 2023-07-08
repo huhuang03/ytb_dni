@@ -1,4 +1,4 @@
-export class Ele_wrapper {
+export class EleWrapper {
   ele: HTMLElement
 
   constructor(ele: HTMLElement) {

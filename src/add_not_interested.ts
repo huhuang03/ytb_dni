@@ -1,9 +1,11 @@
-import {Ele_wrapper} from './ele_wrapper';
+import {EleWrapper} from './ele_wrapper';
 import {MenuContainer} from './menu_container';
 import {SVG_ID} from './constants';
 import {waitAndDo} from './util';
+import {log, logw} from './util_log';
+import {DescContainer} from './desc_container';
 
-class PreviewMenu extends Ele_wrapper {
+class PreviewMenu extends EleWrapper {
     constructor(root) {
         super(root)
         this._init()
@@ -30,56 +32,26 @@ class PreviewMenu extends Ele_wrapper {
     }
 }
 
-/**
- * 每个item就是一个要处理的是视频item
- */
-class Item extends Ele_wrapper {
-    canAddBt = false
-    constructor(ele) {
-        super(ele)
-        this._init()
-    }
-
-    _init() {
-        this.canAddBt = this.ele.offsetWidth > 0
-
-        if (this.canAddBt) {
-            waitAndDo(() => {
-                const menuContainer = this.ele.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
-                const dniContainer = new MenuContainer(menuContainer);
-
-                dniContainer.setMenu(() => this.ele.querySelector("button.style-scope.yt-icon-button"))
-            }, () => {
-                return this.ele && this.ele.querySelector("ytd-menu-renderer.style-scope.ytd-rich-grid-media")
-            }, 10000, 500)
-        }
-    }
-
-
+function getVideoMenuContainerList() {
+    return Array.from(document.querySelectorAll("ytd-rich-grid-media > div #details.style-scope.ytd-rich-grid-media"))
 }
 
-function getDetails() {
-    let details = Array.from(document.querySelectorAll("ytd-rich-grid-media div .style-scope.ytd-rich-grid-media"))
-    details = details.filter(d => d.id === "details")
-    return details
-}
-
-function logw(...args) {
-    console.log.apply(null, ...args)
-}
-
-function log(...args: any[]) {
-    if (true) {
-        console.log.apply(null, args)
-    }
+function getShortMenuContainerList(): Element[] {
+    return Array.from(document.querySelectorAll("ytd-rich-grid-slim-media > div #details.style-scope.ytd-rich-grid-slim-media"))
 }
 
 function run() {
-    let details = getDetails()
-    log("details len: " + details.length, "is Ytb home: ", isYtbHome())
+    let details = getVideoMenuContainerList()
     details.map(d => {
         if (isYtbHome()) {
-            new Item(d)
+            new DescContainer(d).init()
+        }
+    })
+
+    let shortMenuContainerList = getShortMenuContainerList()
+    shortMenuContainerList.map(d => {
+        if (isYtbHome()) {
+            new DescContainer(d).init()
         }
     })
 }
@@ -93,15 +65,16 @@ function _initPreview() {
     setTimeout(() => {
         // 这里可能有错误啊
         const preview = document.getElementById("preview")
-        // how to handle this?
-        // the menu is not ready!
+        if (preview == null) {
+            return
+        }
         const menu = preview.querySelector("#menu")
         if (menu == null) {
             return
         }
 
         const handlePreviewChange = function (mutationsList, observer) {
-            log("hanldePeviewChange called ----------")
+            log("handlePreviewChange called ----------")
 
             for (let mutation of mutationsList) {
                 log("mutation: " + mutation.type)
@@ -156,7 +129,7 @@ function _initItems() {
 // some things it's too early this get called.
 // should wait for the content is ready!!
 function _initial() {
-    log("_initial caleld")
+    log("_initial called")
     if (!isYtbHome()) {
         log("is not ytb home, just return")
         return
@@ -177,13 +150,12 @@ function _initial() {
     waitAndDo(() => {
         _initItems()
     }, () => {
-        return _getContentElement() != null && getDetails().length > 0
+        return _getContentElement() != null && getVideoMenuContainerList().length > 0
     }, 4000, 500)
 }
 
 function isYtbHome() {
     const location = window.location
-    log("location1: " + location)
     return location && (location.pathname == "/" || location.pathname == "")
 }
 
