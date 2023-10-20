@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "ytb not-interested button",
-    "description": "add the not-interest button to video.",
+    "description": "add do-not-interest button to video.",
     "version": "0.1.1",
 
     "content_scripts": [
@@ -18,14 +18,16 @@
         "48": "ic_not_interested_48.png",
         "128": "ic_not_interested_128.png"
     },
-    "options_page": "options.html",
-
+    "options_ui": {
+      "page": "options.html",
+      "open_in_tab": false
+    },
     "background": {
         "service_worker": "background.js"
     },
 
     "permissions": [
-        "webNavigation", "scripting"
+        "webNavigation", "scripting", "storage"
     ],
 
     "host_permissions": [
