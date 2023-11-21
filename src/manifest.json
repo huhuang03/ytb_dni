@@ -27,7 +27,7 @@
     },
 
     "permissions": [
-        "webNavigation", "scripting", "storage"
+        "webNavigation", "scripting"
     ],
 
     "host_permissions": [
