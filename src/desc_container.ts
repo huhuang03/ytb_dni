@@ -1,5 +1,5 @@
 import {EleWrapper} from './ele_wrapper';
-import {waitAndDo} from './util';
+import {busyWaitThenDo} from './util';
 import {MenuContainer} from './menu_container';
 
 /**
@@ -17,7 +17,7 @@ export class DescContainer extends EleWrapper {
     this.canAddBt = this.ele.offsetWidth > 0
 
     if (this.canAddBt) {
-      waitAndDo(() => {
+      busyWaitThenDo(() => {
         const menuContainer = this.ele.querySelector(this.menuQuerySelector)
         const dniContainer = new MenuContainer(menuContainer);
 

@@ -1,12 +1,12 @@
 {
     "manifest_version": 3,
     "name": "ytb not-interested button",
-    "description": "add the not-interest button to video.",
+    "description": "add do-not-interest button to video.",
     "version": "0.1.2",
 
     "content_scripts": [
         {
-            "matches": ["https://www.youtube.com/"],
+            "matches": ["https://www.youtube.com/*"],
             "js": ["add_not_interested.js"],
             "run_at": "document_end"
         }
@@ -18,8 +18,10 @@
         "48": "ic_not_interested_48.png",
         "128": "ic_not_interested_128.png"
     },
-    "options_page": "options.html",
-
+    "options_ui": {
+      "page": "options.html",
+      "open_in_tab": false
+    },
     "background": {
         "service_worker": "background.js"
     },

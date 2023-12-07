@@ -1,9 +1,10 @@
 import {EleWrapper} from './ele_wrapper';
 import {MenuContainer} from './menu_container';
 import {SVG_ID} from './constants';
-import {waitAndDo} from './util';
+import {busyWaitThenDo} from './util';
 import {log, logw} from './util_log';
 import {DescContainer} from './desc_container';
+import * as path from 'path';
 
 class PreviewMenu extends EleWrapper {
     constructor(root) {
@@ -147,7 +148,7 @@ function _initial() {
     _initPreview()
 
     // ok how to do this?
-    waitAndDo(() => {
+    busyWaitThenDo(() => {
         _initItems()
     }, () => {
         return _getContentElement() != null && getVideoMenuContainerList().length > 0
@@ -159,7 +160,6 @@ function isYtbHome() {
     return location && (location.pathname == "/" || location.pathname == "")
 }
 
-setTimeout(_initial, 0)
 
 // can you inject css not like this!!
 // this will not change!!
@@ -181,4 +181,14 @@ function _addCss() {
     document.getElementsByTagName('head')[0].appendChild(style);
 }
 
-_addCss()
+function _main() {
+  const pathname = window.location.pathname
+  if (pathname && pathname !== '/') {
+    return
+  }
+
+  _addCss()
+  setTimeout(_initial, 0)
+}
+
+_main()
