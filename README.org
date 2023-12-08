@@ -7,6 +7,3 @@ This is the source code fo the [[https://chrome.google.com/webstore/detail/ytb-n
 https://chrome.google.com/webstore/detail/trash-youtube-recommendat/dkomodiphnbnnfaokdokdjejjgafoffi?hl=zh-CN&authuser=0
 
 https://stackoverflow.com/questions/20865581/chrome-extension-content-script-not-loaded-until-page-is-refreshed
-
-* Buy me a coffee
-  If you think it saved your time and want support me, please [[https://www.buymeacoffee.com/huhuang03][buy me a coffee]].
