@@ -9,17 +9,20 @@ export class DescContainer extends EleWrapper {
   canAddBt = false
   menuQuerySelector = 'ytd-menu-renderer'
 
+  /**
+   * @param ele ele 应该是desc的container
+   */
   constructor(ele) {
     super(ele)
   }
 
-  init() {
+  init(marginTop=0) {
     this.canAddBt = this.ele.offsetWidth > 0
 
     if (this.canAddBt) {
       busyWaitThenDo(() => {
         const menuContainer = this.ele.querySelector(this.menuQuerySelector)
-        const dniContainer = new MenuContainer(menuContainer);
+        const dniContainer = new MenuContainer(menuContainer, marginTop);
 
         dniContainer.setMenu(() => this.ele.querySelector('button.style-scope.yt-icon-button'))
       }, () => {

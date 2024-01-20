@@ -1,5 +1,5 @@
 export function logw(...args) {
-  console.log(...args)
+  console.warn(...args)
 }
 
 export function log(...args: any[]) {

@@ -5,19 +5,23 @@ import {DniButtonFinder} from './dni_button_finder';
 /**
  * This MenuContainer is the direct container of DNI
  *
- * And for now, it mantians flexDirection.
+ * And for now, it maintains flexDirection.
  *
  * its ele is the dni parent.
+ *
+ * There's two type of this. One is normal, one is for playlist
  */
 export class MenuContainer extends EleWrapper {
   dni: DNI
   hasAdded = false
   dniButtonFinder: DniButtonFinder
+  marginTop = 0
 
   // ele is the menuContainer
-  constructor(ele) {
+  constructor(ele, marginTop = 0) {
     super(ele)
-    this.dniButtonFinder = new DniButtonFinder(this)
+    this.dniButtonFinder = new DniButtonFinder()
+    this.marginTop = marginTop
     this.dni = null
     this._init()
   }
@@ -28,7 +32,7 @@ export class MenuContainer extends EleWrapper {
     if (!this.hasAdded) {
       this.ele.style.flexDirection = 'column'
 
-      this.dni = new DNI()
+      this.dni = new DNI(this.marginTop)
       this.ele.append(this.dni.ele)
     }
   }
