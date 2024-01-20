@@ -1,7 +1,6 @@
-import {MenuContainer} from './menu_container';
-
+// find dni button in menu
 export class DniButtonFinder {
-  constructor(menuContainer: MenuContainer) {
+  constructor() {
   }
 
   private findItemParent(partContent: Element): HTMLElement | null {

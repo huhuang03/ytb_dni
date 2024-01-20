@@ -4,7 +4,7 @@ import {SVG_ID} from './constants';
 import {busyWaitThenDo} from './util';
 import {log, logw} from './util_log';
 import {DescContainer} from './desc_container';
-import * as path from 'path';
+import {initInWatch} from './init_in_watch';
 
 class PreviewMenu extends EleWrapper {
     constructor(root) {
@@ -64,7 +64,6 @@ function _initPreview() {
 
     (window as any)._has_init_preview = true;
     setTimeout(() => {
-        // 这里可能有错误啊
         const preview = document.getElementById("preview")
         if (preview == null) {
             return
@@ -145,6 +144,7 @@ function _initial() {
     // <div id="contents" class="style-scope ytd-item-section-renderer"></div>
     (window as any)._has_add_ytb_dni = true
 
+    // seems like this is used in play
     _initPreview()
 
     // ok how to do this?
@@ -183,11 +183,12 @@ function _addCss() {
 
 function _main() {
   const pathname = window.location.pathname
+  _addCss()
+  initInWatch()
   if (pathname && pathname !== '/') {
     return
   }
 
-  _addCss()
   setTimeout(_initial, 0)
 }
 

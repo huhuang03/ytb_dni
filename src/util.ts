@@ -13,4 +13,3 @@ function _waitAndDoOnce(startTime, func, checkFunc, timeout, checkInterval) {
     }
   }, checkInterval)
 }
-

@@ -2,9 +2,11 @@ import {EleWrapper} from './ele_wrapper';
 import {SVG_ID} from './constants';
 
 export class DNI extends EleWrapper {
-  // how do you do this?
-  constructor() {
+  marginTop = 0
+
+  constructor(marginTop = 0) {
     super(null)
+    this.marginTop = marginTop
     this.ele = this._createDniButton()
   }
 
@@ -12,6 +14,7 @@ export class DNI extends EleWrapper {
   _createDniButton() {
     let button = document.createElement('button');
     button.setAttribute('class', 'style-scope yt-icon-button ytd-menu-renderer')
+    button.setAttribute('style', `margin-top: ${this.marginTop}px`)
 
     let svg = this._createSvg()
     svg.setAttribute('id', SVG_ID)
