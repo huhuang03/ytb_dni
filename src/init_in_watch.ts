@@ -12,7 +12,6 @@ function run() {
   if (!isWatch()) {
     return
   }
-  document.querySelectorAll("ytd-compact-video-renderer")
   const itemRootList = document.querySelectorAll("ytd-compact-video-renderer .details.style-scope.ytd-compact-video-renderer")
   const validateItems = Array.from(itemRootList)
 
@@ -28,7 +27,6 @@ function run() {
 function _init_after_check_ready() {
   run()
 
-  document.querySelector("ytd-watch-next-secondary-results-renderer ytd-item-section-renderer #contents")
   const container = document.querySelector("ytd-watch-next-secondary-results-renderer ytd-item-section-renderer #contents")
   if (container) {
     // not work anymore. why?
