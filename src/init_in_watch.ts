@@ -4,12 +4,12 @@ import {busyWaitThenDo} from './util';
 import {DescContainer} from './desc_container';
 import {log, logw} from './util_log';
 
-function isWatch() {
+function isWatchPage() {
   return location.pathname === '/watch'
 }
 
 function run() {
-  if (!isWatch()) {
+  if (!isWatchPage()) {
     return
   }
   const itemRootList = document.querySelectorAll("ytd-compact-video-renderer .details.style-scope.ytd-compact-video-renderer")
@@ -18,7 +18,13 @@ function run() {
   const mixItemRootList = document.querySelectorAll("ytd-compact-radio-renderer .details.style-scope.ytd-compact-radio-renderer")
   const validateMixItems = Array.from(mixItemRootList)
 
+  // short items
+  const shortElements = document.querySelectorAll("yt-horizontal-list-renderer.ytd-reel-shelf-renderer ytd-reel-item-renderer")
+  log('shortElements: ', shortElements)
+  const shortItems = Array.from(shortElements)
+
   validateItems.push(...validateMixItems)
+  validateItems.push(...shortItems)
   for (let validateItem of validateItems) {
     new DescContainer(validateItem).init(10)
   }
@@ -44,7 +50,7 @@ function _init_after_check_ready() {
 }
 
 export function initInWatch() {
-  if (!isWatch()) {
+  if (!isWatchPage()) {
     return
   }
   busyWaitThenDo(_init_after_check_ready, () => {

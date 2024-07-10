@@ -3,7 +3,7 @@ export function logw(...args) {
 }
 
 export function log(...args: any[]) {
-  if (false) {
+  if (true) {
     console.log.apply(null, args)
   }
 }
