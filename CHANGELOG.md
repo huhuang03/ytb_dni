@@ -1,3 +1,6 @@
+* [0.1.5] - 2024-9-16
+add option "Also click reason: not like"
+ 
 * [0.1.4] - 2024-1-20
 add button on video play page, see issue #5.
  
