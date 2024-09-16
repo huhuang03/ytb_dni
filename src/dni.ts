@@ -1,6 +1,11 @@
-import {EleWrapper} from './ele_wrapper';
+// noinspection JSSuspiciousNameCombination
+
+import {EleWrapper} from './base/ele_wrapper';
 import {SVG_ID} from './constants';
 
+/**
+ * Ok, DNI is the do not interest button
+ */
 export class DNI extends EleWrapper {
   marginTop = 0
 

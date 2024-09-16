@@ -1,17 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Test Extension Options</title>
+    <title>Options</title>
+    <style>
+        .root {
+            width: 200px;
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .desc {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-<label>
-    <input type="checkbox" id="like" />
-    Show dni channel button:
-</label>
+<div class="root">
+    <div class="option-container">
+        <label for="cbClickTellNotInterest">Also tell ytb don't like the video</label>
+        <input type="checkbox" id="cbClickTellNotInterest">
+    </div>
 
-<div id="status"></div>
-<button id="save">Save</button>
+    <div class="desc">
+        <ul>
+            <li>
+                Option "Also tell ytb don't like the video":
+                <br />
+                If check, will auto click "Tell us why" > "I don't like the video" > "Submit"
+            </li>
+        </ul>
+    </div>
+</div>
 
-<script src="options.js"></script>
+<script defer src="options.js" type="module"></script>
 </body>
 </html>

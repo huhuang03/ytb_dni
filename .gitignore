@@ -4,3 +4,4 @@ dist/
 *.zip
 .idea/
 node_modules/
+.yarn/

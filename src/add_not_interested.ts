@@ -1,7 +1,7 @@
-import {EleWrapper} from './ele_wrapper';
+import {EleWrapper} from './base/ele_wrapper';
 import {MenuContainer} from './menu_container';
 import {SVG_ID} from './constants';
-import {busyWaitThenDo} from './util';
+import {checkThenDo} from './util';
 import {log, logw} from './util_log';
 import {DescContainer} from './desc_container';
 import {initInWatch} from './init_in_watch';
@@ -18,7 +18,9 @@ class PreviewMenu extends EleWrapper {
             return
         }
 
+        // @ts-ignore
         const dniContainer = new MenuContainer(containerEle)
+        // @ts-ignore
         dniContainer.setMenu(() => containerEle.querySelector("yt-icon-button.dropdown-trigger").querySelector("#button"))
     }
 
@@ -148,7 +150,7 @@ function _initial() {
     _initPreview()
 
     // ok how to do this?
-    busyWaitThenDo(() => {
+    checkThenDo(() => {
         _initItems()
     }, () => {
         return _getContentElement() != null && getVideoMenuContainerList().length > 0

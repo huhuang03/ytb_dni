@@ -1,6 +1,6 @@
 // not refactor to this file yet.
 
-import {busyWaitThenDo} from './util';
+import {checkThenDo} from './util';
 import {DescContainer} from './desc_container';
 import {log, logw} from './util_log';
 
@@ -53,7 +53,7 @@ export function initInWatch() {
   if (!isWatchPage()) {
     return
   }
-  busyWaitThenDo(_init_after_check_ready, () => {
+  checkThenDo(_init_after_check_ready, () => {
     return document.getElementsByTagName("ytd-compact-video-renderer").length > 0
   }, 4000)
 }
