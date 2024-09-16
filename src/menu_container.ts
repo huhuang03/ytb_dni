@@ -135,9 +135,8 @@ export class MenuContainer extends EleWrapper {
    * @private
    */
   private clickTellUsWhyButton(button: HTMLElement,
-                               checkWait = 150,
+                               checkWait = 200,
                                curTimes = 0) {
-    console.log('clickTellUsWhyButton called for times: ', curTimes)
     const tryTotalTimes = 3
 
     setTimeout(() => {

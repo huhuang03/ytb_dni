@@ -1,5 +1,4 @@
 chrome.webNavigation.onHistoryStateUpdated.addListener(function(details) {
-    // console.log("onHistoryStateUpdated called")
     // ok, let do something.
     const url = details.url
     if (url === 'https://www.youtube.com' || url === 'https://www.youtube.com/') {

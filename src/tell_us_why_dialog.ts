@@ -10,8 +10,6 @@ export class TellUsWhyDialog extends EleWrapper {
 
   static has(): boolean {
     const root = getRootElement()
-    console.log('root: ', root)
-    console.log('TellUsWhyDialog.has: ', eleIsShowing(root))
     return eleIsShowing(root)
   }
 
@@ -33,11 +31,9 @@ export class TellUsWhyDialog extends EleWrapper {
    * submit button has enable and disable state. This find the enable element
    */
   clickAndSubmitDontLike() {
-    console.log('clickAndSubmitDontLike begin call')
     waitElement({
       check: () => this.notLikeCheckbox(),
       run: (notLike) => {
-        console.log('notLike check box found!!')
         notLike.click()
         setTimeout(() => {
             const confirm = TellUsWhyDialog.submitButton(this.ele)

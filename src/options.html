@@ -4,7 +4,7 @@
     <title>Options</title>
     <style>
         .root {
-            width: 200px;
+            width: 300px;
         }
 
         .option-container {
@@ -13,24 +13,29 @@
             align-items: center;
         }
 
-        .desc {
+        .dni_desc-container {
             margin-top: 20px;
+        }
+        .dni_desc {
+            color: #666;
         }
     </style>
 </head>
 <body>
 <div class="root">
     <div class="option-container">
-        <label for="cbClickTellNotInterest">Also tell ytb don't like the video</label>
+        <label for="cbClickTellNotInterest">Also click reason: not like</label>
         <input type="checkbox" id="cbClickTellNotInterest">
     </div>
 
-    <div class="desc">
+    <div class="dni_desc-container">
         <ul>
             <li>
-                Option "Also tell ytb don't like the video":
+                Option "Also click reason: not like":
                 <br />
+                <span class="dni_desc">
                 If check, will auto click "Tell us why" > "I don't like the video" > "Submit"
+                </span>
             </li>
         </ul>
     </div>

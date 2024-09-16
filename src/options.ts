@@ -16,7 +16,6 @@ const sync = (value, callback) => {
       const cb = document.getElementById(CB_ID) as HTMLInputElement
       cb.checked = tell
       if (value !== null && value !== undefined) {
-        console.log('value: ', value)
         chrome.storage.local.set({
           [KEY_TELL_US_WHY]: tell
         })
@@ -29,7 +28,6 @@ const sync = (value, callback) => {
 sync(null, () => {
   const cb = document.getElementById(CB_ID);
   cb.addEventListener('change', (ev) => {
-    console.log('change: ', ev)
     const target = ev.target as HTMLInputElement
     sync(target.checked, null);
   });
