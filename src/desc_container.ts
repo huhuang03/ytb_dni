@@ -1,5 +1,5 @@
-import {EleWrapper} from './ele_wrapper';
-import {busyWaitThenDo} from './util';
+import {EleWrapper} from './base/ele_wrapper';
+import {checkThenDo} from './util';
 import {MenuContainer} from './menu_container';
 
 /**
@@ -20,13 +20,14 @@ export class DescContainer extends EleWrapper {
     this.canAddBt = this.ele.offsetWidth > 0
 
     if (this.canAddBt) {
-      busyWaitThenDo(() => {
+      checkThenDo(() => {
         const menuContainer = this.ele.querySelector(this.menuQuerySelector)
+        // @ts-ignore
         const dniContainer = new MenuContainer(menuContainer, marginTop);
 
         dniContainer.setMenu(() => this.ele.querySelector('button.style-scope.yt-icon-button'))
       }, () => {
-        return this.ele && this.ele.querySelector(this.menuQuerySelector)
+        return this.ele && !!this.ele.querySelector(this.menuQuerySelector)
       }, 10000, 500)
     }
   }

@@ -1,8 +1,16 @@
-import {EleWrapper} from './ele_wrapper';
+import {EleWrapper} from './base/ele_wrapper';
 import {DNI} from './dni';
 import {DniButtonFinder} from './dni_button_finder';
+import {findParent} from './util';
+import {TellUsWhyDialog} from './tell_us_why_dialog';
+import {KEY_TELL_US_WHY} from './common/constants';
+import {waitBoolean, waitElement, waitFor} from './util_wait';
+
+declare var chrome: any
 
 /**
+ * This wrap the menu container, and can add a dni button
+ *
  * This MenuContainer is the direct container of DNI
  *
  * And for now, it maintains flexDirection.
@@ -12,13 +20,13 @@ import {DniButtonFinder} from './dni_button_finder';
  * There's two type of this. One is normal, one is for playlist
  */
 export class MenuContainer extends EleWrapper {
-  dni: DNI
+  dni: DNI | null = null
   hasAdded = false
   dniButtonFinder: DniButtonFinder
   marginTop = 0
 
   // ele is the menuContainer
-  constructor(ele, marginTop = 0) {
+  constructor(ele: HTMLElement, marginTop = 0) {
     super(ele)
     this.dniButtonFinder = new DniButtonFinder()
     this.marginTop = marginTop
@@ -37,12 +45,11 @@ export class MenuContainer extends EleWrapper {
     }
   }
 
-  setMenu(menuFinder) {
+  setMenu(menuFinder: any) {
     if (this.dni == null) {
       return;
     }
 
-    // why dni is null??
     this.dni.ele.onclick = () => {
       this._doNotInterest(menuFinder)
     }
@@ -52,7 +59,7 @@ export class MenuContainer extends EleWrapper {
     return this.dniButtonFinder.findDni()
   }
 
-  _doNotInterest(menuFinder) {
+  _doNotInterest(menuFinder: () => any) {
     const btMenu = menuFinder()
     btMenu.click()
     let found = false
@@ -66,6 +73,7 @@ export class MenuContainer extends EleWrapper {
       if (findEle) {
         found = true
         findEle.click()
+        this.clickTellUsWhy().then(() => {})
       } else {
         if ((new Date().getTime() - beginTime) < 2000) {
           setTimeout(check, 20)
@@ -74,6 +82,92 @@ export class MenuContainer extends EleWrapper {
     }
 
     setTimeout(check, 50)
+  }
+
+  private async isOptionTellUsWhyOn(): Promise<Boolean> {
+    let res = await chrome.storage.local.get({[KEY_TELL_US_WHY]: false});
+    return res[KEY_TELL_US_WHY];
+  }
+
+  /**
+   * Get this item root
+   * @private
+   */
+  private getDismissedRoot(): HTMLElement | null {
+    const root = this.getRoot()
+    if (!root) {
+      return null
+    }
+    return root.querySelector('div[id="dismissed-content"]')
+  }
+
+  private getRoot(): HTMLElement | null {
+    return findParent(this.ele,
+      (e) => e.tagName === 'YTD-RICH-GRID-MEDIA')
+  }
+
+  /**
+   * click tell us why, and then I don't like this video.
+   * @private
+   */
+  private async clickTellUsWhy() {
+    const isOn = await this.isOptionTellUsWhyOn()
+    if (!isOn) {
+      return
+    }
+
+    const itemRoot = this.getDismissedRoot()
+    if (!itemRoot) {
+      return
+    }
+
+    waitElement({
+      check: () => this.getTellUsWhyButton(itemRoot),
+      run: button => {
+        this.clickTellUsWhyButton(button)
+      }
+    })
+  }
+
+  /**
+   * look like we can't click too early, otherwise look like the onclick event is not set,
+   * So try many times
+   * @private
+   */
+  private clickTellUsWhyButton(button: HTMLElement,
+                               checkWait = 200,
+                               curTimes = 0) {
+    const tryTotalTimes = 3
+
+    setTimeout(() => {
+      button.click()
+      waitBoolean({
+        timeout: 500,
+        check: TellUsWhyDialog.has,
+        run: () => {
+          TellUsWhyDialog.wait((dialog) => {
+            dialog.clickAndSubmitDontLike()
+          })
+        },
+        timeoutRun: () => {
+          if (curTimes >= tryTotalTimes) {
+            console.error('can not find tell us button')
+          } else {
+            this.clickTellUsWhyButton(button, 100, curTimes + 1)
+          }
+        }
+      })
+    }, checkWait)
+  }
+
+
+  private getTellUsWhyButton(itemContainer: HTMLElement) {
+    const buttons = itemContainer.querySelector('div[id="dismissed-content"] ytd-notification-multi-action-renderer div[id="buttons"]') as HTMLElement | null
+    if (!buttons) {
+      return null
+    }
+    const buttonContainer =  buttons.children[buttons.children.length - 1] as HTMLElement
+    return buttonContainer.querySelector("div.yt-spec-touch-feedback-shape__fill") as HTMLElement
   }
 
 }

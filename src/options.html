@@ -1,17 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>My Test Extension Options</title>
+    <title>Options</title>
+    <style>
+        .root {
+            width: 300px;
+        }
+
+        .option-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+
+        .dni_desc-container {
+            margin-top: 20px;
+        }
+        .dni_desc {
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-<label>
-    <input type="checkbox" id="like" />
-    Show dni channel button:
-</label>
+<div class="root">
+    <div class="option-container">
+        <label for="cbClickTellNotInterest">Also click reason: not like</label>
+        <input type="checkbox" id="cbClickTellNotInterest">
+    </div>
 
-<div id="status"></div>
-<button id="save">Save</button>
+    <div class="dni_desc-container">
+        <ul>
+            <li>
+                Option "Also click reason: not like":
+                <br />
+                <span class="dni_desc">
+                If check, will auto click "Tell us why" > "I don't like the video" > "Submit"
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>
 
-<script src="options.js"></script>
+<script defer src="options.js" type="module"></script>
 </body>
 </html>
