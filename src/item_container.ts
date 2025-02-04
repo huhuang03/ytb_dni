@@ -10,6 +10,7 @@ export class ItemContainer extends HtmlElementWrapper {
   canAddBt = false
   menuContainerFinder: ElementFinder = new EmptyElementFinder()
   menuFinder: ElementFinder = new EmptyElementFinder()
+  checkClickReason = true
 
   /**
    * @param ele ele 应该是desc的container
@@ -19,10 +20,12 @@ export class ItemContainer extends HtmlElementWrapper {
   constructor(
     ele: HTMLElement,
     menuContainerFinder: ElementFinder = new ElementByQueryFinder('ytd-menu-renderer'),
-    menuFinder: ElementFinder = new ElementByQueryFinder('button.style-scope.yt-icon-button')) {
+    menuFinder: ElementFinder = new ElementByQueryFinder('button.style-scope.yt-icon-button'),
+    checkClickReason = true) {
     super(ele)
     this.menuContainerFinder = menuContainerFinder
     this.menuFinder = menuFinder
+    this.checkClickReason = checkClickReason
   }
 
   init(marginTop=0) {
@@ -32,7 +35,7 @@ export class ItemContainer extends HtmlElementWrapper {
       checkThenDo(() => {
         const menuContainer = this.menuContainerFinder.find(this.ele)
         // @ts-ignore
-        const dniContainer = new MenuContainer(menuContainer, marginTop);
+        const dniContainer = new MenuContainer(menuContainer, marginTop, this.checkClickReason);
         dniContainer.setMenu(() => this.menuFinder.find(this.ele))
       }, () => {
         return this.ele && !! this.menuContainerFinder.find(this.ele)

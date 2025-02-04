@@ -1,7 +1,7 @@
 import {ElementGlobalFinder} from './common/element_finder';
+import {eleIsShowing} from './util/util';
 
 function findItemParent(partContent: Element): HTMLElement | null {
-  console.log('findItemParent called with: ', partContent)
   if (!partContent) {
     return null
   }
@@ -84,7 +84,7 @@ export class DniButtonFinder {
     const finders = [this.findByText, this.findByPath]
     for (const finder of finders) {
       const find = finder.apply(this)
-      if (find) {
+      if (find && eleIsShowing(find)) {
         return find
       }
     }
@@ -92,7 +92,7 @@ export class DniButtonFinder {
     const finders1 = [new YtbShortDniButtonFinderByText(), new YtbShortDniButtonFinderBySvg()]
     for (let finder of finders1) {
       const found = finder.find()
-      if (found) {
+      if (found && eleIsShowing(found)) {
         return found
       }
     }

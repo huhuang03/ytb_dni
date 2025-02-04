@@ -57,7 +57,8 @@ function run() {
     if (isYtbHome()) {
       new ItemContainer(
         d, new ElementByQueryFinder(SHORTS_MENU_CONTAINER_QUERY_SELECTOR),
-        new ElementByQueryFinder(SHORTS_MENU_QUERY_SELECTOR)).init()
+        new ElementByQueryFinder(SHORTS_MENU_QUERY_SELECTOR)).init(),
+        false
     }
   })
 }

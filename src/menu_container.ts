@@ -24,13 +24,15 @@ export class MenuContainer extends HtmlElementWrapper {
   hasAdded = false
   dniButtonFinder: DniButtonFinder
   marginTop = 0
+  checkClickReason = true
 
   // ele is the menuContainer
-  constructor(ele: HTMLElement, marginTop = 0) {
+  constructor(ele: HTMLElement, marginTop = 0, checkClickReason = true) {
     super(ele)
     this.dniButtonFinder = new DniButtonFinder()
     this.marginTop = marginTop
     this.dni = null
+    this.checkClickReason = checkClickReason
     this._init()
   }
 
@@ -75,7 +77,9 @@ export class MenuContainer extends HtmlElementWrapper {
       if (findEle) {
         found = true
         findEle.click()
-        this.clickTellUsWhy().then(() => {})
+        if (this.checkClickReason) {
+          this.clickTellUsWhy().then(() => {})
+        }
       } else {
         if ((new Date().getTime() - beginTime) < 2000) {
           setTimeout(check, 20)
