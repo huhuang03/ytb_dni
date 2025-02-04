@@ -1,10 +1,10 @@
-import {EleWrapper} from './base/ele_wrapper';
+import {HtmlElementWrapper} from './common/html_element_wrapper';
 import {DNI} from './dni';
 import {DniButtonFinder} from './dni_button_finder';
-import {findParent} from './util';
+import {findParent} from './util/util';
 import {TellUsWhyDialog} from './tell_us_why_dialog';
 import {KEY_TELL_US_WHY} from './common/constants';
-import {waitBoolean, waitElement, waitFor} from './util_wait';
+import {waitBoolean, waitElement, waitFor} from './util/util_wait';
 
 declare var chrome: any
 
@@ -19,7 +19,7 @@ declare var chrome: any
  *
  * There's two type of this. One is normal, one is for playlist
  */
-export class MenuContainer extends EleWrapper {
+export class MenuContainer extends HtmlElementWrapper {
   dni: DNI | null = null
   hasAdded = false
   dniButtonFinder: DniButtonFinder

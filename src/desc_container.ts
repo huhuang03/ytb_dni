@@ -1,18 +1,18 @@
-import {EleWrapper} from './base/ele_wrapper';
-import {checkThenDo} from './util';
+import {HtmlElementWrapper} from './common/html_element_wrapper';
+import {checkThenDo} from './util/util';
 import {MenuContainer} from './menu_container';
 
 /**
  * 每个item就是一个要处理的是视频item
  */
-export class DescContainer extends EleWrapper {
+export class ItemContainer extends HtmlElementWrapper {
   canAddBt = false
   menuQuerySelector = 'ytd-menu-renderer'
 
   /**
    * @param ele ele 应该是desc的container
    */
-  constructor(ele) {
+  constructor(ele: HTMLElement) {
     super(ele)
   }
 

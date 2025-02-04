@@ -1,7 +1,7 @@
 /**
  * This jus wrapper a html element
  */
-export class EleWrapper {
+export class HtmlElementWrapper {
   ele: HTMLElement
 
   constructor(ele: HTMLElement) {

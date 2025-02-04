@@ -1,8 +1,8 @@
 // not refactor to this file yet.
 
-import {checkThenDo} from './util';
-import {DescContainer} from './desc_container';
-import {log, logw} from './util_log';
+import {checkThenDo} from './util/util';
+import {ItemContainer} from './desc_container';
+import {log, logw} from './util/util_log';
 
 function isWatchPage() {
   return location.pathname === '/watch'
@@ -26,7 +26,7 @@ function run() {
   validateItems.push(...validateMixItems)
   validateItems.push(...shortItems)
   for (let validateItem of validateItems) {
-    new DescContainer(validateItem).init(10)
+    new ItemContainer(validateItem).init(10)
   }
 }
 

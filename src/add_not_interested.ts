@@ -1,13 +1,13 @@
-import {EleWrapper} from './base/ele_wrapper';
+import {HtmlElementWrapper} from './common/html_element_wrapper';
 import {MenuContainer} from './menu_container';
 import {SVG_ID} from './constants';
-import {checkThenDo} from './util';
-import {log, logw} from './util_log';
-import {DescContainer} from './desc_container';
+import {checkThenDo} from './util/util';
+import {log, logw} from './util/util_log';
+import {ItemContainer} from './desc_container';
 import {initInWatch} from './init_in_watch';
 
-class PreviewMenu extends EleWrapper {
-    constructor(root) {
+class PreviewMenu extends HtmlElementWrapper {
+    constructor(root: HTMLElement) {
         super(root)
         this._init()
     }
@@ -35,26 +35,26 @@ class PreviewMenu extends EleWrapper {
     }
 }
 
-function getVideoMenuContainerList() {
+function getVideoMenuContainerList(): HTMLElement[] {
     return Array.from(document.querySelectorAll("ytd-rich-grid-media > div #details.style-scope.ytd-rich-grid-media"))
 }
 
-function getShortMenuContainerList(): Element[] {
-    return Array.from(document.querySelectorAll("ytd-rich-grid-slim-media > div #details.style-scope.ytd-rich-grid-slim-media"))
+function getShortMenuContainerList(): HTMLElement[] {
+    return Array.from(document.querySelectorAll("[is-shorts].ytd-rich-section-renderer > ytd-rich-item-renderer"))
 }
 
 function run() {
     let details = getVideoMenuContainerList()
     details.map(d => {
         if (isYtbHome()) {
-            new DescContainer(d).init()
+            new ItemContainer(d).init()
         }
     })
 
     let shortMenuContainerList = getShortMenuContainerList()
     shortMenuContainerList.map(d => {
         if (isYtbHome()) {
-            new DescContainer(d).init()
+            new ItemContainer(d).init()
         }
     })
 }
@@ -70,7 +70,7 @@ function _initPreview() {
         if (preview == null) {
             return
         }
-        const menu = preview.querySelector("#menu")
+        const menu = preview.querySelector("#menu") as HTMLElement
         if (menu == null) {
             return
         }
