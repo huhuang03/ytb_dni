@@ -1,6 +1,6 @@
 // bad name
 export interface ElementGlobalFinder {
-  find(parent: HTMLElement): HTMLElement | null
+  find(): HTMLElement | null
 }
 
 export interface ElementFinder {

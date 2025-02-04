@@ -1,3 +1,47 @@
+import {ElementGlobalFinder} from './common/element_finder';
+
+function findItemParent(partContent: Element): HTMLElement | null {
+  console.log('findItemParent called with: ', partContent)
+  if (!partContent) {
+    return null
+  }
+  if (partContent instanceof HTMLElement && partContent.tagName === 'YT-LIST-ITEM-VIEW-MODEL') {
+    return partContent
+  }
+  return findItemParent(partContent.parentElement)
+}
+
+class YtbShortDniButtonFinderBySvg implements ElementGlobalFinder {
+    find(): HTMLElement {
+      const pathList = document.querySelectorAll('ytd-popup-container yt-sheet-view-model svg path')
+      for (const item of Array.from(pathList)) {
+        const d = item.getAttribute('d')
+        // M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48
+        if (d && d.includes('M12 2c5.52 0 10 4.48')) {
+          return findItemParent(item)
+        }
+      }
+    }
+}
+
+/**
+ * The dni button finder, and it's shorts menu
+ */
+class YtbShortDniButtonFinderByText implements ElementGlobalFinder {
+
+  find(): HTMLElement {
+    const allStr = document.querySelectorAll('yt-core-attributed-string')
+    for (let i = 0; i < allStr.length; i++) {
+      const ele = allStr[i]
+      const elementText = ele.textContent || (ele instanceof HTMLElement && ele.innerText);
+      if (elementText.trim() === 'Not interested') {
+        return findItemParent(ele)
+      }
+    }
+    return null
+  }
+}
+
 // find dni button in menu
 export class DniButtonFinder {
   constructor() {
@@ -28,20 +72,28 @@ export class DniButtonFinder {
   private findByPath(): HTMLElement | null {
     const pathList = document.querySelectorAll('ytd-menu-service-item-renderer path')
     for (const item of Array.from(pathList)) {
-        const d = item.getAttribute('d')
-        // M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48
-        if (d && d.includes('M12 2c5.52 0')) {
-          return this.findItemParent(item)
-        }
+      const d = item.getAttribute('d')
+      // M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48
+      if (d && d.includes('M12 2c5.52 0')) {
+        return this.findItemParent(item)
+      }
     }
   }
 
   public findDni(): HTMLElement | null {
-    const finders= [this.findByText, this.findByPath]
+    const finders = [this.findByText, this.findByPath]
     for (const finder of finders) {
       const find = finder.apply(this)
       if (find) {
         return find
+      }
+    }
+
+    const finders1 = [new YtbShortDniButtonFinderByText(), new YtbShortDniButtonFinderBySvg()]
+    for (let finder of finders1) {
+      const found = finder.find()
+      if (found) {
+        return found
       }
     }
     return null
