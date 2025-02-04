@@ -73,7 +73,6 @@ export class MenuContainer extends HtmlElementWrapper {
         return
       }
       const findEle = this._smart_check_once()
-      console.log('findEle: ', findEle)
       if (findEle) {
         found = true
         findEle.click()
