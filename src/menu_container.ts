@@ -1,10 +1,10 @@
-import {EleWrapper} from './base/ele_wrapper';
+import {HtmlElementWrapper} from './common/html_element_wrapper';
 import {DNI} from './dni';
 import {DniButtonFinder} from './dni_button_finder';
-import {findParent} from './util';
+import {findParent} from './util/util';
 import {TellUsWhyDialog} from './tell_us_why_dialog';
 import {KEY_TELL_US_WHY} from './common/constants';
-import {waitBoolean, waitElement, waitFor} from './util_wait';
+import {waitBoolean, waitElement} from './util/util_wait';
 
 declare var chrome: any
 
@@ -19,18 +19,20 @@ declare var chrome: any
  *
  * There's two type of this. One is normal, one is for playlist
  */
-export class MenuContainer extends EleWrapper {
+export class MenuContainer extends HtmlElementWrapper {
   dni: DNI | null = null
   hasAdded = false
   dniButtonFinder: DniButtonFinder
   marginTop = 0
+  checkClickReason = true
 
   // ele is the menuContainer
-  constructor(ele: HTMLElement, marginTop = 0) {
+  constructor(ele: HTMLElement, marginTop = 0, checkClickReason = true) {
     super(ele)
     this.dniButtonFinder = new DniButtonFinder()
     this.marginTop = marginTop
     this.dni = null
+    this.checkClickReason = checkClickReason
     this._init()
   }
 
@@ -50,7 +52,8 @@ export class MenuContainer extends EleWrapper {
       return;
     }
 
-    this.dni.ele.onclick = () => {
+    this.dni.ele.onclick = (e) => {
+      e.stopPropagation()
       this._doNotInterest(menuFinder)
     }
   }
@@ -73,7 +76,9 @@ export class MenuContainer extends EleWrapper {
       if (findEle) {
         found = true
         findEle.click()
-        this.clickTellUsWhy().then(() => {})
+        if (this.checkClickReason) {
+          this.clickTellUsWhy().then(() => {})
+        }
       } else {
         if ((new Date().getTime() - beginTime) < 2000) {
           setTimeout(check, 20)

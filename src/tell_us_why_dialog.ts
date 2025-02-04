@@ -1,8 +1,8 @@
-import {EleWrapper} from './base/ele_wrapper';
-import {waitElement} from './util_wait';
-import {eleIsShowing} from './util';
+import {HtmlElementWrapper} from './common/html_element_wrapper';
+import {waitElement} from './util/util_wait';
+import {eleIsShowing} from './util/util';
 
-export class TellUsWhyDialog extends EleWrapper {
+export class TellUsWhyDialog extends HtmlElementWrapper {
 
   constructor(ele: HTMLElement) {
     super(ele);

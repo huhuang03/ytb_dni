@@ -1,8 +1,8 @@
 // not refactor to this file yet.
 
-import {checkThenDo} from './util';
-import {DescContainer} from './desc_container';
-import {log, logw} from './util_log';
+import {checkThenDo} from './util/util';
+import {ItemContainer} from './item_container';
+import {log, logw} from './util/util_log';
 
 function isWatchPage() {
   return location.pathname === '/watch'
@@ -13,20 +13,19 @@ function run() {
     return
   }
   const itemRootList = document.querySelectorAll("ytd-compact-video-renderer .details.style-scope.ytd-compact-video-renderer")
-  const validateItems = Array.from(itemRootList)
+  const validateItems = Array.from(itemRootList) as HTMLElement[]
 
   const mixItemRootList = document.querySelectorAll("ytd-compact-radio-renderer .details.style-scope.ytd-compact-radio-renderer")
-  const validateMixItems = Array.from(mixItemRootList)
+  const validateMixItems = Array.from(mixItemRootList) as HTMLElement[]
 
   // short items
   const shortElements = document.querySelectorAll("yt-horizontal-list-renderer.ytd-reel-shelf-renderer ytd-reel-item-renderer")
-  log('shortElements: ', shortElements)
-  const shortItems = Array.from(shortElements)
+  const shortItems = Array.from(shortElements) as HTMLElement[]
 
   validateItems.push(...validateMixItems)
   validateItems.push(...shortItems)
   for (let validateItem of validateItems) {
-    new DescContainer(validateItem).init(10)
+    new ItemContainer(validateItem).init(10)
   }
 }
 
@@ -35,11 +34,7 @@ function _init_after_check_ready() {
 
   const container = document.querySelector("ytd-watch-next-secondary-results-renderer ytd-item-section-renderer #contents")
   if (container) {
-    // not work anymore. why?
-    log('set MutationObserver called')
     new MutationObserver(() => {
-      log("MutationObserver callback called")
-      // how to do this?
       run()
     }).observe(container, {
       childList: true,
