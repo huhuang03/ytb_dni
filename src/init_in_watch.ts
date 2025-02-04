@@ -13,15 +13,14 @@ function run() {
     return
   }
   const itemRootList = document.querySelectorAll("ytd-compact-video-renderer .details.style-scope.ytd-compact-video-renderer")
-  const validateItems = Array.from(itemRootList)
+  const validateItems = Array.from(itemRootList) as HTMLElement[]
 
   const mixItemRootList = document.querySelectorAll("ytd-compact-radio-renderer .details.style-scope.ytd-compact-radio-renderer")
-  const validateMixItems = Array.from(mixItemRootList)
+  const validateMixItems = Array.from(mixItemRootList) as HTMLElement[]
 
   // short items
   const shortElements = document.querySelectorAll("yt-horizontal-list-renderer.ytd-reel-shelf-renderer ytd-reel-item-renderer")
-  log('shortElements: ', shortElements)
-  const shortItems = Array.from(shortElements)
+  const shortItems = Array.from(shortElements) as HTMLElement[]
 
   validateItems.push(...validateMixItems)
   validateItems.push(...shortItems)

@@ -11,13 +11,16 @@ export class ItemContainer extends HtmlElementWrapper {
 
   /**
    * @param ele ele 应该是desc的container
+   * @param menuQuerySelector
    */
-  constructor(ele: HTMLElement) {
+  constructor(ele: HTMLElement, menuQuerySelector: string = 'ytd-menu-renderer') {
     super(ele)
+    this.menuQuerySelector = menuQuerySelector
   }
 
   init(marginTop=0) {
     this.canAddBt = this.ele.offsetWidth > 0
+    console.log('canAddBt: ', this.canAddBt)
 
     if (this.canAddBt) {
       checkThenDo(() => {
