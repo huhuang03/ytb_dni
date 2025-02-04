@@ -4,7 +4,7 @@ import {DniButtonFinder} from './dni_button_finder';
 import {findParent} from './util/util';
 import {TellUsWhyDialog} from './tell_us_why_dialog';
 import {KEY_TELL_US_WHY} from './common/constants';
-import {waitBoolean, waitElement, waitFor} from './util/util_wait';
+import {waitBoolean, waitElement} from './util/util_wait';
 
 declare var chrome: any
 
@@ -50,7 +50,8 @@ export class MenuContainer extends HtmlElementWrapper {
       return;
     }
 
-    this.dni.ele.onclick = () => {
+    this.dni.ele.onclick = (e) => {
+      e.stopPropagation()
       this._doNotInterest(menuFinder)
     }
   }
@@ -70,6 +71,7 @@ export class MenuContainer extends HtmlElementWrapper {
         return
       }
       const findEle = this._smart_check_once()
+      console.log('findEle: ', findEle)
       if (findEle) {
         found = true
         findEle.click()

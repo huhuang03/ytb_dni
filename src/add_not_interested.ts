@@ -3,9 +3,10 @@ import {MenuContainer} from './menu_container';
 import {SVG_ID} from './constants';
 import {checkThenDo} from './util/util';
 import {log, logw} from './util/util_log';
-import {ItemContainer} from './desc_container';
+import {ItemContainer} from './item_container';
 import {initInWatch} from './init_in_watch';
-import {SHORTS_MENU_QUERY_SELECTOR} from './shorts';
+import {SHORTS_MENU_CONTAINER_QUERY_SELECTOR, SHORTS_MENU_QUERY_SELECTOR} from './shorts';
+import {ElementByQueryFinder} from './common/element_finder';
 
 class PreviewMenu extends HtmlElementWrapper {
   constructor(root: HTMLElement) {
@@ -54,7 +55,9 @@ function run() {
   let shortMenuContainerList = getShortMenuContainerList()
   shortMenuContainerList.map(d => {
     if (isYtbHome()) {
-      new ItemContainer(d, SHORTS_MENU_QUERY_SELECTOR).init()
+      new ItemContainer(
+        d, new ElementByQueryFinder(SHORTS_MENU_CONTAINER_QUERY_SELECTOR),
+        new ElementByQueryFinder(SHORTS_MENU_QUERY_SELECTOR)).init()
     }
   })
 }
@@ -112,11 +115,7 @@ function _initItems() {
   run()
   const e_content = _getContentElement()
   if (e_content) {
-    // not work anymore. why?
-    log('set MutationObserver called')
     new MutationObserver(() => {
-      log('MutationObserver callback called')
-      // how to do this?
       if (isYtbHome()) {
         run()
       }
@@ -131,9 +130,7 @@ function _initItems() {
 // some things it's too early this get called.
 // should wait for the content is ready!!
 function _initial() {
-  log('_initial called')
   if (!isYtbHome()) {
-    log('is not ytb home, just return')
     return
   }
 

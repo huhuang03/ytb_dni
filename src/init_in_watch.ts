@@ -1,7 +1,7 @@
 // not refactor to this file yet.
 
 import {checkThenDo} from './util/util';
-import {ItemContainer} from './desc_container';
+import {ItemContainer} from './item_container';
 import {log, logw} from './util/util_log';
 
 function isWatchPage() {
@@ -34,11 +34,7 @@ function _init_after_check_ready() {
 
   const container = document.querySelector("ytd-watch-next-secondary-results-renderer ytd-item-section-renderer #contents")
   if (container) {
-    // not work anymore. why?
-    log('set MutationObserver called')
     new MutationObserver(() => {
-      log("MutationObserver callback called")
-      // how to do this?
       run()
     }).observe(container, {
       childList: true,
