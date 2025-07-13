@@ -34,7 +34,7 @@ export class TellUsWhyDialog extends HtmlElementWrapper {
     waitElement({
       check: () => this.notLikeCheckbox(),
       run: (notLike) => {
-        notLike.click()
+        notLike?.click()
         setTimeout(() => {
             const confirm = TellUsWhyDialog.submitButton(this.ele)
             if (!confirm) {

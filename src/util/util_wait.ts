@@ -7,7 +7,7 @@
 export function waitElement(
   {check, run, timeoutRun}: {
     check: () => HTMLElement | null | undefined,
-    run: (el: HTMLElement) => void,
+    run: (el: HTMLElement | null | undefined) => void,
     timeoutRun?: () => void
   }) {
   return waitFor<HTMLElement>({
@@ -18,11 +18,11 @@ export function waitElement(
 export function waitBoolean(
   {check, run, timeoutRun, timeout}: {
     check: () => boolean,
-    run: (el: boolean) => void,
+    run: (el: Boolean | null | undefined) => void,
     timeoutRun?: () => void,
     timeout?: number
   }) {
-  return waitFor<boolean>({
+  return waitFor<Boolean>({
     check, run, timeoutRun, timeout, boolChecker: (data) => !!data
   })
 }
@@ -30,9 +30,9 @@ export function waitBoolean(
 export function waitFor<T>(
   {check, run, timeoutRun, boolChecker, timeout}: {
     check: () => T | null | undefined,
-    boolChecker?: (data?: T) => boolean,
-    run: (ele: T) => void,
+    run: (ele: T | null | undefined) => void,
     timeoutRun?: () => void,
+    boolChecker?: (data: T | null | undefined) => boolean,
     timeout?: number
   }
 ) {

@@ -8,10 +8,11 @@ export interface ElementFinder {
 }
 
 export class EmptyElementFinder implements ElementByQueryFinder {
-    selector: string;
-    find(_parent: HTMLElement): HTMLElement {
-      return null
-    }
+  selector: string = '';
+
+  find(_parent: HTMLElement): HTMLElement | null {
+    return null
+  }
 }
 
 export class ElementByQueryFinder implements ElementFinder {

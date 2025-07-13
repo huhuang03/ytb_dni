@@ -1,4 +1,4 @@
-export function eleIsShowing(ele?: HTMLElement) {
+export function eleIsShowing(ele: HTMLElement | null | undefined): boolean {
   if (!ele) {
     return false
   }
@@ -6,7 +6,7 @@ export function eleIsShowing(ele?: HTMLElement) {
     ele.getBoundingClientRect().height > 0;
 }
 
-export function findParent(ele: HTMLElement, check: (ele: HTMLElement) => boolean): HTMLElement | null {
+export function findParent(ele: HTMLElement | null, check: (ele: HTMLElement) => boolean): HTMLElement | null {
   if (!ele) {
     return ele
   }

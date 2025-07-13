@@ -5,9 +5,7 @@ import {findParent} from './util/util';
 import {TellUsWhyDialog} from './tell_us_why_dialog';
 import {KEY_TELL_US_WHY} from './common/constants';
 import {waitBoolean, waitElement} from './util/util_wait';
-
-declare var chrome: any
-
+import {browserApi} from './util/brower_api';
 /**
  * This wrap the menu container, and can add a dni button
  *
@@ -90,7 +88,7 @@ export class MenuContainer extends HtmlElementWrapper {
   }
 
   private async isOptionTellUsWhyOn(): Promise<Boolean> {
-    let res = await chrome.storage.local.get({[KEY_TELL_US_WHY]: false});
+    let res = await browserApi.storage.local.get({[KEY_TELL_US_WHY]: false});
     return res[KEY_TELL_US_WHY];
   }
 
@@ -139,13 +137,13 @@ export class MenuContainer extends HtmlElementWrapper {
    * So try many times
    * @private
    */
-  private clickTellUsWhyButton(button: HTMLElement,
+  private clickTellUsWhyButton(button: HTMLElement | null | undefined,
                                checkWait = 200,
                                curTimes = 0) {
     const tryTotalTimes = 3
 
     setTimeout(() => {
-      button.click()
+      button?.click()
       waitBoolean({
         timeout: 500,
         check: TellUsWhyDialog.has,
