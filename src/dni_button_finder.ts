@@ -1,7 +1,7 @@
 import {ElementGlobalFinder} from './common/element_finder';
 import {eleIsShowing} from './util/util';
 
-function findItemParent(partContent: Element): HTMLElement | null {
+function findItemParent(partContent: Element | null): HTMLElement | null {
   if (!partContent) {
     return null
   }
@@ -12,7 +12,7 @@ function findItemParent(partContent: Element): HTMLElement | null {
 }
 
 class YtbShortDniButtonFinderBySvg implements ElementGlobalFinder {
-    find(): HTMLElement {
+    find(): HTMLElement | null {
       const pathList = document.querySelectorAll('ytd-popup-container yt-sheet-view-model svg path')
       for (const item of Array.from(pathList)) {
         const d = item.getAttribute('d')
@@ -21,6 +21,7 @@ class YtbShortDniButtonFinderBySvg implements ElementGlobalFinder {
           return findItemParent(item)
         }
       }
+      return null
     }
 }
 
@@ -29,11 +30,11 @@ class YtbShortDniButtonFinderBySvg implements ElementGlobalFinder {
  */
 class YtbShortDniButtonFinderByText implements ElementGlobalFinder {
 
-  find(): HTMLElement {
+  find(): HTMLElement | null {
     const allStr = document.querySelectorAll('yt-core-attributed-string')
     for (let i = 0; i < allStr.length; i++) {
       const ele = allStr[i]
-      const elementText = ele.textContent || (ele instanceof HTMLElement && ele.innerText);
+      const elementText = ele.textContent || (ele instanceof HTMLElement && ele.innerText || '');
       if (elementText.trim() === 'Not interested') {
         return findItemParent(ele)
       }
@@ -47,7 +48,7 @@ export class DniButtonFinder {
   constructor() {
   }
 
-  private findItemParent(partContent: Element): HTMLElement | null {
+  private findItemParent(partContent: Element | null): HTMLElement | null {
     if (!partContent) {
       return null
     }
@@ -61,7 +62,7 @@ export class DniButtonFinder {
     const allStr = document.querySelectorAll('ytd-menu-service-item-renderer yt-formatted-string')
     for (let i = 0; i < allStr.length; i++) {
       const ele = allStr[i]
-      const elementText = ele.textContent || (ele instanceof HTMLElement && ele.innerText);
+      const elementText = ele.textContent || (ele instanceof HTMLElement && ele.innerText || "");
       if (elementText.trim() === 'Not interested') {
         return this.findItemParent(ele)
       }
@@ -69,7 +70,7 @@ export class DniButtonFinder {
     return null
   }
 
-  private findByPath(): HTMLElement | null {
+  private findByPath(): HTMLElement | null | undefined {
     const pathList = document.querySelectorAll('ytd-menu-service-item-renderer path')
     for (const item of Array.from(pathList)) {
       const d = item.getAttribute('d')

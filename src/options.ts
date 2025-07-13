@@ -3,10 +3,10 @@ import {browserApi} from './util/brower_api';
 
 const CB_ID = 'cbClickTellNotInterest'
 
-const sync = (value, callback) => {
+const sync = (value: any, callback: any) => {
   browserApi.storage.local.get(
     {[KEY_TELL_US_WHY]: value},
-    (items) => {
+    (items: any) => {
       const hasValue = value !== null && value !== undefined
       let tell = items[KEY_TELL_US_WHY]
       if (hasValue) {
@@ -27,7 +27,7 @@ const sync = (value, callback) => {
 
 sync(null, () => {
   const cb = document.getElementById(CB_ID);
-  cb.addEventListener('change', (ev) => {
+  cb?.addEventListener('change', (ev) => {
     const target = ev.target as HTMLInputElement
     sync(target.checked, null);
   });

@@ -1,13 +1,21 @@
 {
   "scripts": {
+    "build:chrome": "cross-env TARGET=chrome rollup -c",
+    "build:firefox": "cross-env TARGET=firefox rollup -c",
     "build": "rollup -c",
     "watch": "rollup -c --watch"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.2",
     "@web/rollup-plugin-copy": "^0.3.0",
-    "rollup": "^3.20.2",
+    "cross-env": "^7.0.3",
+    "fast-glob": "^3.3.3",
+    "rollup": "^4.44.2",
     "rollup-plugin-ts": "^3.2.0",
     "typescript": "^5.0.3"
+  },
+  "dependencies": {
+    "fs-extra": "^11.3.0",
+    "tslib": "^2.8.1"
   }
 }

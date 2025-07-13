@@ -137,13 +137,13 @@ export class MenuContainer extends HtmlElementWrapper {
    * So try many times
    * @private
    */
-  private clickTellUsWhyButton(button: HTMLElement,
+  private clickTellUsWhyButton(button: HTMLElement | null | undefined,
                                checkWait = 200,
                                curTimes = 0) {
     const tryTotalTimes = 3
 
     setTimeout(() => {
-      button.click()
+      button?.click()
       waitBoolean({
         timeout: 500,
         check: TellUsWhyDialog.has,

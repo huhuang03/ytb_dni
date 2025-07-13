@@ -10,26 +10,25 @@ export class DNI extends HtmlElementWrapper {
   marginTop = 0
 
   constructor(marginTop = 0) {
-    super(null)
+    super(DNI._createDniButton(marginTop))
     this.marginTop = marginTop
-    this.ele = this._createDniButton()
   }
 
   // it's something not interesting??
-  _createDniButton() {
+  static _createDniButton(marginTop: number) {
     let button = document.createElement('button');
     button.setAttribute('class', 'style-scope yt-icon-button ytd-menu-renderer')
-    button.setAttribute('style', `margin-top: ${this.marginTop}px`)
+    button.setAttribute('style', `margin-top: ${marginTop}px`)
 
-    let svg = this._createSvg()
+    let svg = DNI._createSvg()
     svg.setAttribute('id', SVG_ID)
     button.appendChild(svg)
     return button
   }
 
   // 创建svg。即那个圆圈中加一杠图案
-  _createSvg() {
-    function getNode(n, v) {
+  static _createSvg() {
+    function getNode(n: any, v: any) {
       n = document.createElementNS('http://www.w3.org/2000/svg', n);
       for (let p in v)
         n.setAttributeNS(null, p.replace(/[A-Z]/g, function (m, p, o, s) {
