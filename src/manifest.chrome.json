@@ -15,7 +15,7 @@
     }
   ],
   "action": {
-    "default_popup": "options.html"
+    "default_popup": "popup/popup.html"
   },
   "icons": {
     "16": "ic_not_interested_16.png",

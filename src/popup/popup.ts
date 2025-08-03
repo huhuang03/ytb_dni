@@ -1,5 +1,5 @@
-import {KEY_TELL_US_WHY} from './common/constants';
-import {browserApi} from './util/brower_api';
+import {KEY_TELL_US_WHY} from '../common/constants';
+import {browserApi} from '../util/brower_api';
 
 const CB_ID = 'cbClickTellNotInterest'
 
@@ -32,4 +32,3 @@ sync(null, () => {
     sync(target.checked, null);
   });
 });
-

@@ -52,9 +52,9 @@ export default [
     ]
   },
   {
-    input: 'src/options.ts',
+    input: 'src/popup/popup.ts',
     output: {
-      file: `dist/${target}/options.js`,
+      file: `dist/${target}/popup/popup.js`,
       format: 'iife',  // 单个文件打包
       name: 'OptionsBundle'  // 全局变量名称
     },
