@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "ytb not-interested button",
+  "description": "add do-not-interest button to video.",
+  "version": "0.1.6",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "js": [
+        "add_not_interested.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+  "action": {
+    "default_popup": "options.html"
+  },
+  "icons": {
+    "16": "ic_not_interested_16.png",
+    "32": "ic_not_interested_32.png",
+    "48": "ic_not_interested_48.png",
+    "128": "ic_not_interested_128.png"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false
+  },
+  "permissions": [
+    "webNavigation",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://www.youtube.com/"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ytb-not-interested@huhuang03.com"
+    }
+  }
+}

@@ -57,7 +57,7 @@ function run() {
     if (isYtbHome()) {
       new ItemContainer(
         d, new ElementByQueryFinder(SHORTS_MENU_CONTAINER_QUERY_SELECTOR),
-        new ElementByQueryFinder(SHORTS_MENU_QUERY_SELECTOR)).init(),
+        new ElementByQueryFinder(SHORTS_MENU_QUERY_SELECTOR)).init()
         false
     }
   })
@@ -79,9 +79,8 @@ function _initPreview() {
       return
     }
 
-    const handlePreviewChange = function (mutationsList, observer) {
+    const handlePreviewChange = function (mutationsList: any, observer: any) {
       log('handlePreviewChange called ----------')
-
       for (let mutation of mutationsList) {
         log('mutation: ' + mutation.type)
         // how do you think??

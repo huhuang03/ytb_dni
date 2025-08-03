@@ -1,4 +1,4 @@
-export function logw(...args) {
+export function logw(...args: any[]) {
   console.warn(...args)
 }
 

@@ -1,12 +1,12 @@
 import {KEY_TELL_US_WHY} from './common/constants';
+import {browserApi} from './util/brower_api';
 
 const CB_ID = 'cbClickTellNotInterest'
-declare var chrome: any
 
-const sync = (value, callback) => {
-  chrome.storage.local.get(
+const sync = (value: any, callback: any) => {
+  browserApi.storage.local.get(
     {[KEY_TELL_US_WHY]: value},
-    (items) => {
+    (items: any) => {
       const hasValue = value !== null && value !== undefined
       let tell = items[KEY_TELL_US_WHY]
       if (hasValue) {
@@ -16,7 +16,7 @@ const sync = (value, callback) => {
       const cb = document.getElementById(CB_ID) as HTMLInputElement
       cb.checked = tell
       if (value !== null && value !== undefined) {
-        chrome.storage.local.set({
+        browserApi.storage.local.set({
           [KEY_TELL_US_WHY]: tell
         })
       }
@@ -27,7 +27,7 @@ const sync = (value, callback) => {
 
 sync(null, () => {
   const cb = document.getElementById(CB_ID);
-  cb.addEventListener('change', (ev) => {
+  cb?.addEventListener('change', (ev) => {
     const target = ev.target as HTMLInputElement
     sync(target.checked, null);
   });
