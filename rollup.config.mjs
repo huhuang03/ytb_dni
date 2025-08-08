@@ -1,4 +1,4 @@
-import ts from 'rollup-plugin-ts'
+import typescript from '@rollup/plugin-typescript'
 import resolve from '@rollup/plugin-node-resolve'
 import { customCopy } from './rollup_plugin/rollup-plugin-custom-copy.mjs'
 import path from 'path'
@@ -25,7 +25,7 @@ function copyManifest({ from, to }) {
 }
 
 const commonPlugins = [
-  ts(),
+  typescript(),
   resolve()
 ]
 
@@ -55,6 +55,15 @@ export default [
     input: 'src/options.ts',
     output: {
       file: `dist/${target}/options.js`,
+      format: 'iife',  // 单个文件打包
+      name: 'OptionsBundle'  // 全局变量名称
+    },
+    plugins: commonPlugins
+  },
+  {
+    input: 'src/background.ts',
+    output: {
+      file: `dist/${target}/background.js`,
       format: 'iife',  // 单个文件打包
       name: 'OptionsBundle'  // 全局变量名称
     },

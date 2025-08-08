@@ -1,7 +1,7 @@
 // not refactor to this file yet.
 
 import {checkThenDo} from './util/util';
-import {ItemContainer} from './item_container';
+import {VideoCardMenuWrapper} from './item_container';
 import {log, logw} from './util/util_log';
 
 function isWatchPage() {
@@ -25,7 +25,7 @@ function run() {
   validateItems.push(...validateMixItems)
   validateItems.push(...shortItems)
   for (let validateItem of validateItems) {
-    new ItemContainer(validateItem).init(10)
+    new VideoCardMenuWrapper(validateItem).init(10)
   }
 }
 

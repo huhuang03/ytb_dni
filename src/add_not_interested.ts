@@ -3,7 +3,7 @@ import {MenuContainer} from './menu_container';
 import {SVG_ID} from './constants';
 import {checkThenDo} from './util/util';
 import {log, logw} from './util/util_log';
-import {ItemContainer} from './item_container';
+import {VideoCardMenuWrapper} from './item_container';
 import {initInWatch} from './init_in_watch';
 import {SHORTS_MENU_CONTAINER_QUERY_SELECTOR, SHORTS_MENU_QUERY_SELECTOR} from './shorts';
 import {ElementByQueryFinder} from './common/element_finder';
@@ -36,8 +36,8 @@ class PreviewMenu extends HtmlElementWrapper {
   }
 }
 
-function getVideoMenuContainerList(): HTMLElement[] {
-  return Array.from(document.querySelectorAll('ytd-rich-grid-media > div #details.style-scope.ytd-rich-grid-media'))
+function queryVideoCardMenuRoot(): HTMLElement[] {
+  return Array.from(document.querySelectorAll('ytd-rich-item-renderer button-view-model'))
 }
 
 function getShortMenuContainerList(): HTMLElement[] {
@@ -45,17 +45,17 @@ function getShortMenuContainerList(): HTMLElement[] {
 }
 
 function run() {
-  let details = getVideoMenuContainerList()
-  details.map(d => {
+  let items = queryVideoCardMenuRoot()
+  items.map(d => {
       if (isYtbHome()) {
-          new ItemContainer(d).init()
+          new VideoCardMenuWrapper(d).init()
       }
   })
 
   let shortMenuContainerList = getShortMenuContainerList()
   shortMenuContainerList.map(d => {
     if (isYtbHome()) {
-      new ItemContainer(
+      new VideoCardMenuWrapper(
         d, new ElementByQueryFinder(SHORTS_MENU_CONTAINER_QUERY_SELECTOR),
         new ElementByQueryFinder(SHORTS_MENU_QUERY_SELECTOR)).init()
         false
@@ -150,7 +150,7 @@ function _initial() {
   checkThenDo(() => {
     _initItems()
   }, () => {
-    return _getContentElement() != null && getVideoMenuContainerList().length > 0
+    return _getContentElement() != null && queryVideoCardMenuRoot().length > 0
   }, 4000, 500)
 }
 

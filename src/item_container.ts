@@ -3,13 +3,22 @@ import {checkThenDo} from './util/util';
 import {MenuContainer} from './menu_container';
 import {ElementByQueryFinder, ElementFinder, EmptyElementFinder} from './common/element_finder';
 
-/**
- * 每个item就是一个要处理的是视频item
- */
-export class ItemContainer extends HtmlElementWrapper {
+const _menuContainerFinder: ElementFinder = {
+  find(item: HTMLElement) {
+    return item.parentElement
+  }
+}
+
+const _menuFinder: ElementFinder = {
+  find(item: HTMLElement) {
+    return item
+  }
+}
+
+export class VideoCardMenuWrapper extends HtmlElementWrapper {
   canAddBt = false
-  menuContainerFinder: ElementFinder = new EmptyElementFinder()
-  menuFinder: ElementFinder = new EmptyElementFinder()
+  menuContainerFinder: ElementFinder
+  menuFinder: ElementFinder
   checkClickReason = true
 
   /**
@@ -19,8 +28,8 @@ export class ItemContainer extends HtmlElementWrapper {
    */
   constructor(
     ele: HTMLElement,
-    menuContainerFinder: ElementFinder = new ElementByQueryFinder('ytd-menu-renderer'),
-    menuFinder: ElementFinder = new ElementByQueryFinder('button.style-scope.yt-icon-button'),
+    menuContainerFinder: ElementFinder = _menuContainerFinder,
+    menuFinder: ElementFinder = _menuFinder,
     checkClickReason = true) {
     super(ele)
     this.menuContainerFinder = menuContainerFinder
@@ -28,7 +37,7 @@ export class ItemContainer extends HtmlElementWrapper {
     this.checkClickReason = checkClickReason
   }
 
-  init(marginTop=0) {
+  init(marginTop = 0) {
     this.canAddBt = this.ele.offsetWidth > 0
 
     if (this.canAddBt) {
@@ -36,10 +45,18 @@ export class ItemContainer extends HtmlElementWrapper {
         const menuContainer = this.menuContainerFinder.find(this.ele)
         // @ts-ignore
         const dniContainer = new MenuContainer(menuContainer, marginTop, this.checkClickReason);
-        dniContainer.setMenu(() => this.menuFinder.find(this.ele))
+        dniContainer.setMenu(() => this.getMenuButton())
       }, () => {
-        return this.ele && !! this.menuContainerFinder.find(this.ele)
+        return this.ele && !!this.menuContainerFinder.find(this.ele)
       }, 10000, 500)
     }
+  }
+
+  getMenuButton() {
+    const menu = this.menuFinder.find(this.ele)
+    if (menu?.children && menu.children.length > 0 && menu.children[0].tagName == 'BUTTON') {
+      return menu.children[0]
+    }
+    return menu
   }
 }
