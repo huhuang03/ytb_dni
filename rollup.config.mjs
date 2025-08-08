@@ -59,5 +59,14 @@ export default [
       name: 'OptionsBundle'  // 全局变量名称
     },
     plugins: commonPlugins
+  },
+  {
+    input: 'src/background.ts',
+    output: {
+      file: `dist/${target}/background.js`,
+      format: 'iife',  // 单个文件打包
+      name: 'OptionsBundle'  // 全局变量名称
+    },
+    plugins: commonPlugins
   }
 ]
