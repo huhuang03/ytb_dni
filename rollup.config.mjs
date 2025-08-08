@@ -1,4 +1,4 @@
-import ts from 'rollup-plugin-ts'
+import typescript from '@rollup/plugin-typescript'
 import resolve from '@rollup/plugin-node-resolve'
 import { customCopy } from './rollup_plugin/rollup-plugin-custom-copy.mjs'
 import path from 'path'
@@ -25,7 +25,7 @@ function copyManifest({ from, to }) {
 }
 
 const commonPlugins = [
-  ts(),
+  typescript(),
   resolve()
 ]
 
