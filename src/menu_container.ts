@@ -51,6 +51,7 @@ export class MenuContainer extends HtmlElementWrapper {
     }
 
     this.dni.ele.onclick = (e) => {
+      e.stopImmediatePropagation()
       e.stopPropagation()
       this._doNotInterest(menuFinder)
     }
