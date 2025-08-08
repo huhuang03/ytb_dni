@@ -1,5 +1,11 @@
 This is the source code fo the [[https://chrome.google.com/webstore/detail/ytb-not-interested-button/okfiigkfppbpfjaiffmllkkfbpdnhofn][chrome ytb-interested button extension]].
 
+* Build for firefox
+#+begin_src shell
+make build-firefox
+#+end_src
+
+
 * TODOS
 - it seems somethings not show: open a video, watch some times. Click ytb left top button, then don't show sometimes.
 
