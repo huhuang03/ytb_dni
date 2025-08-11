@@ -3,23 +3,23 @@ from datetime import datetime
 import zipfile
 
 suffix = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-cur_root = os.path.dirname(__file__)
+work_dir = os.path.dirname(__file__) + "/.."
 
 # 删除旧的 dist-*.zip 文件
-for name in os.listdir(cur_root):
+for name in os.listdir(work_dir):
     if name.startswith('dist-') and name.endswith('.zip'):
-        os.remove(os.path.join(cur_root, name))
+        os.remove(os.path.join(work_dir, name))
 
 # 要打包的子目录列表
 targets = ['chrome', 'firefox']
 
 for target in targets:
-    dist_path = os.path.join(cur_root, 'dist', target)
+    dist_path = os.path.join(work_dir, 'dist', target)
     if not os.path.isdir(dist_path):
         continue
 
     zip_name = f'dist-{target}-{suffix}.zip'
-    zip_path = os.path.join(cur_root, zip_name)
+    zip_path = os.path.join(work_dir, zip_name)
 
     with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zf:
         for dirname, subdirs, files in os.walk(dist_path):
