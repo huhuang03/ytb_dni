@@ -1,7 +1,7 @@
 // not refactor to this file yet.
 
 import {checkThenDo} from './util/util';
-import {VideoCardMenuWrapper} from './item_container';
+import {PlayCardInHomeWrapper} from './player_card_in_home';
 import {log, logw} from './util/util_log';
 
 function isWatchPage() {
@@ -25,7 +25,7 @@ function run() {
   validateItems.push(...validateMixItems)
   validateItems.push(...shortItems)
   for (let validateItem of validateItems) {
-    new VideoCardMenuWrapper(validateItem).init(10)
+    new PlayCardInHomeWrapper(validateItem).init(10)
   }
 }
 
@@ -49,6 +49,6 @@ export function initInWatch() {
     return
   }
   checkThenDo(_init_after_check_ready, () => {
-    return document.getElementsByTagName("ytd-compact-video-renderer").length > 0
+    return isWatchPage() && document.getElementsByTagName('yt-lockup-view-model').length > 0
   }, 4000)
 }

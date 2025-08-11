@@ -3,10 +3,11 @@ import {MenuContainer} from './menu_container';
 import {SVG_ID} from './constants';
 import {checkThenDo} from './util/util';
 import {log, logw} from './util/util_log';
-import {VideoCardMenuWrapper} from './item_container';
+import {PlayCardInHomeWrapper} from './player_card_in_home';
 import {initInWatch} from './init_in_watch';
 import {SHORTS_MENU_CONTAINER_QUERY_SELECTOR, SHORTS_MENU_QUERY_SELECTOR} from './shorts';
 import {ElementByQueryFinder} from './common/element_finder';
+import {ShortInHome} from './short_in_home';
 
 class PreviewMenu extends HtmlElementWrapper {
   constructor(root: HTMLElement) {
@@ -36,33 +37,24 @@ class PreviewMenu extends HtmlElementWrapper {
   }
 }
 
-function queryVideoCardMenuRoot(): HTMLElement[] {
-  return Array.from(document.querySelectorAll('ytd-rich-item-renderer button-view-model'))
-}
-
-function getShortMenuContainerList(): HTMLElement[] {
-  return Array.from(document.querySelectorAll('[is-shorts].ytd-rich-section-renderer ytd-rich-item-renderer'))
+function queryPlayerList(): HTMLElement[] {
+  return Array.from(document.querySelectorAll('yt-lockup-view-model'))
 }
 
 function run() {
-  let items = queryVideoCardMenuRoot()
-  items.map(d => {
-      if (isYtbHome()) {
-          new VideoCardMenuWrapper(d).init()
-      }
+  // the normal videos
+  let playerList = queryPlayerList()
+  playerList.forEach(ele => {
+    new PlayCardInHomeWrapper(ele as HTMLElement).init()
   })
 
-  let shortMenuContainerList = getShortMenuContainerList()
-  shortMenuContainerList.map(d => {
-    if (isYtbHome()) {
-      new VideoCardMenuWrapper(
-        d, new ElementByQueryFinder(SHORTS_MENU_CONTAINER_QUERY_SELECTOR),
-        new ElementByQueryFinder(SHORTS_MENU_QUERY_SELECTOR)).init()
-        false
-    }
+  let shorts = Array.from(document.querySelectorAll('ytm-shorts-lockup-view-model-v2'))
+  shorts.forEach(ele => {
+    new ShortInHome(ele as HTMLElement).init()
   })
 }
 
+// what's this?
 function _initPreview() {
   if ((window as any)._has_init_preview) {
     return;
@@ -80,9 +72,7 @@ function _initPreview() {
     }
 
     const handlePreviewChange = function (mutationsList: any, observer: any) {
-      log('handlePreviewChange called ----------')
       for (let mutation of mutationsList) {
-        log('mutation: ' + mutation.type)
         // how do you think??
         setTimeout(() => {
           new PreviewMenu(menu)
@@ -135,22 +125,19 @@ function _initial() {
   }
 
   if ((window as any)._has_add_ytb_dni) {
-    logw('ytb has already initialed!!')
     return
   }
 
   // 如果是从详情点击图片返回的，有两个contents
-  // <div id="contents" class="style-scope ytd-item-section-renderer"></div>
   (window as any)._has_add_ytb_dni = true
 
   // seems like this is used in play
   _initPreview()
 
-  // ok how to do this?
   checkThenDo(() => {
     _initItems()
   }, () => {
-    return _getContentElement() != null && queryVideoCardMenuRoot().length > 0
+    return _getContentElement() != null && queryPlayerList().length > 0
   }, 4000, 500)
 }
 
