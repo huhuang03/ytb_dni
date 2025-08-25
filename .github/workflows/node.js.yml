@@ -14,20 +14,20 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x, 22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+
+    - name: Use Node.js 22.x
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
+        node-version: 22.x
+        cache: 'yarn'   # 改成 yarn 缓存
+
+    - name: Install dependencies
+      run: yarn install --frozen-lockfile   # 使用 yarn
+
     - name: Build Chrome Extension
-      run: npm run build:chrome
+      run: yarn build:chrome   # yarn 对应 package.json 脚本
+
     - name: Build Firefox Extension
-      run: npm run build:firefox
+      run: yarn build:firefox
