@@ -21,13 +21,19 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 22.x
-        cache: 'yarn'   # 改成 yarn 缓存
+        cache: 'yarn'
+
+    # 启用 Corepack，并激活 Yarn 4.x
+    - name: Enable Yarn 4
+      run: |
+        corepack enable
+        corepack prepare yarn@4.9.2 --activate
 
     - name: Install dependencies
-      run: yarn install --frozen-lockfile   # 使用 yarn
+      run: yarn install --immutable   # Yarn 4 的替代 frozen-lockfile
 
     - name: Build Chrome Extension
-      run: yarn build:chrome   # yarn 对应 package.json 脚本
+      run: yarn build:chrome
 
     - name: Build Firefox Extension
       run: yarn build:firefox
