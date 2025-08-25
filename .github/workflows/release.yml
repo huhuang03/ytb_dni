@@ -1,0 +1,71 @@
+name: Release Extension
+
+on:
+  push:
+    tags:
+      - 'v*'   # 只有 push v1.0.0 这种 tag 才触发
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'yarn'
+
+      - name: Enable Yarn 4
+        run: |
+          corepack enable
+          corepack prepare yarn@4.9.2 --activate
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Build Chrome Extension
+        run: yarn build:chrome
+
+      - name: Build Firefox Extension
+        run: yarn build:firefox
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+
+      - name: Zip Chrome
+        run: |
+          cd dist
+          zip -r chrome-${{ github.ref_name }}.zip chrome
+          cd ..
+
+      - name: Zip Firefox
+        run: |
+          cd dist
+          zip -r firefox-${{ github.ref_name }}.zip firefox
+          cd ..
+
+      - name: Upload Chrome zip
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/chrome-${{ github.ref_name }}.zip
+          asset_name: chrome-${{ github.ref_name }}.zip
+          asset_content_type: application/zip
+
+      - name: Upload Firefox zip
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/firefox-${{ github.ref_name }}.zip
+          asset_name: firefox-${{ github.ref_name }}.zip
+          asset_content_type: application/zip
