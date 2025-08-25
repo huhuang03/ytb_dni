@@ -19,6 +19,7 @@ jobs:
           node-version: 22.x
           cache: 'yarn'
 
+      # 启用 Corepack，并激活 Yarn 4.x
       - name: Enable Yarn 4
         run: |
           corepack enable
@@ -33,6 +34,7 @@ jobs:
       - name: Build Firefox Extension
         run: yarn build:firefox
 
+      # 创建 Release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -41,19 +43,23 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
 
+      # 打包 Chrome
       - name: Zip Chrome
         run: |
           cd dist
           zip -r chrome-${{ github.ref_name }}.zip chrome
           cd ..
 
+      # 打包 Firefox
       - name: Zip Firefox
         run: |
           cd dist
           zip -r firefox-${{ github.ref_name }}.zip firefox
           cd ..
 
+      # 上传 Chrome zip 到 Release
       - name: Upload Chrome zip
         uses: actions/upload-release-asset@v1
         with:
@@ -62,6 +68,7 @@ jobs:
           asset_name: chrome-${{ github.ref_name }}.zip
           asset_content_type: application/zip
 
+      # 上传 Firefox zip 到 Release
       - name: Upload Firefox zip
         uses: actions/upload-release-asset@v1
         with:
