@@ -3,7 +3,7 @@ import {CardWrapper} from './card_wrapper';
 
 const _buttonViewModelFinder: ElementFinder = {
   find(item) {
-    return item.querySelector("button-view-model")
+    return item.querySelector("yt-lockup-metadata-view-model button-view-model")
   }
 }
 
