@@ -117,6 +117,8 @@ export class DniButtonFinder {
   }
 
   public findDni(): HTMLElement | null {
+    // this is duplicated with below two finder
+    // but for now, not delete.
     const finders = [this.findByText, this.findByPath]
     for (const finder of finders) {
       const find = finder.apply(this)
