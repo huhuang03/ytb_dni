@@ -25,7 +25,7 @@ class YtbShortDniButtonFinderBySvg implements ElementGlobalFinder {
   }
 }
 
-const notInterestedStrList = ['Not interested', 'Не интересует']
+const notInterestedStrList = ['Not interested', 'Не интересует', '不感兴趣']
 
 function _isNotInterested(str: string | null | undefined) {
   return notInterestedStrList.includes((str || '').trim())
@@ -87,7 +87,7 @@ export class DniButtonFinder {
     if (!partContent) {
       return null
     }
-    if (partContent instanceof HTMLElement && partContent.tagName === 'YTD-MENU-SERVICE-ITEM-RENDERER') {
+    if (partContent instanceof HTMLElement && partContent.tagName === 'YT-LIST-ITEM-VIEW-MODEL') {
       return partContent
     }
     return this.findItemParent(partContent.parentElement)
@@ -107,12 +107,10 @@ export class DniButtonFinder {
   }
 
   private findByPath(): HTMLElement | null | undefined {
-    const pathList = document.querySelectorAll('ytd-menu-service-item-renderer path')
+    const pathList = document.querySelectorAll('ytd-popup-container yt-list-view-model svg path')
     for (const item of Array.from(pathList)) {
       const d = item.getAttribute('d')
-      // M12 2c5.52 0 10 4.48 10 10s-4.48 10-10 10S2 17.52 2 12 6.48
-      // <path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm0 2a9 9 0 018.246 12.605L4.755 6.661A8.99 8.99 0 0112 3ZM3.754 8.393l15.491 8.944A9 9 0 013.754 8.393Z"></path>
-      if (d && (d.includes('M12 2c5.52 0') || d.startsWith('M12 1C5.925 1 1 5.925'))) {
+      if (d && _is_svg_path_the_not_interested(d)) {
         return this.findItemParent(item)
       }
     }
@@ -137,4 +135,14 @@ export class DniButtonFinder {
     return null
   }
 
+}
+
+
+// add to fav is
+// M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm0 2a9 9 0 110 18.001A9 9 0 0112 3Zm0 3a1 1 0 00-1 1v5.565l.485.292 3.33 2a1 1 0 001.03-1.714L13 11.435V7a1 1 0 00-1-1Z
+
+// not interested is
+// M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1Zm0 2a9 9 0 018.246 12.605L4.755 6.661A8.99 8.99 0 0112 3ZM3.754 8.393l15.491 8.944A9 9 0 013.754 8.393Z
+function _is_svg_path_the_not_interested(path_str: string): boolean {
+  return path_str.includes('M12 1C5.925 1 1 5.925 1') && path_str.includes('018.246 12.605L4.755')
 }
