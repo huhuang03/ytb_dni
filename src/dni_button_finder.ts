@@ -25,6 +25,12 @@ class YtbShortDniButtonFinderBySvg implements ElementGlobalFinder {
   }
 }
 
+const notInterestedStrList = ['Not interested', 'Не интересует']
+
+function _isNotInterested(str: string | null | undefined) {
+  return notInterestedStrList.includes((str || '').trim())
+}
+
 /**
  * The dni button finder, and it's shorts menu
  */
@@ -35,7 +41,7 @@ class YtbShortDniButtonFinderByText implements ElementGlobalFinder {
     for (let i = 0; i < allStr.length; i++) {
       const ele = allStr[i]
       const elementText = ele.textContent || (ele instanceof HTMLElement && ele.innerText || '');
-      if (elementText.trim() === 'Not interested') {
+      if (_isNotInterested(elementText.trim())) {
         return findItemParent(ele)
       }
     }
@@ -64,7 +70,7 @@ class PlayingMenuFinder implements ElementGlobalFinder {
     for (let i = 0; i < allStr.length; i++) {
       const ele = allStr[i]
       const elementText = ele.textContent || (ele instanceof HTMLElement && ele.innerText || '');
-      if (elementText.trim() === 'Not interested') {
+      if (_isNotInterested(elementText.trim())) {
         return this.findParent(ele as HTMLElement)
       }
     }
@@ -93,7 +99,7 @@ export class DniButtonFinder {
     for (let i = 0; i < allStr.length; i++) {
       const ele = allStr[i]
       const elementText = ele.textContent || (ele instanceof HTMLElement && ele.innerText || '');
-      if (elementText.trim() === 'Not interested') {
+      if (_isNotInterested(elementText.trim())) {
         // return this.findItemParent(ele)
       }
     }
