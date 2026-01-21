@@ -40,7 +40,7 @@ export class MenuContainer extends HtmlElementWrapper {
     if (!this.hasAdded) {
       this.ele.style.flexDirection = 'column'
 
-      this.dni = new DNI(this.marginTop)
+      this.dni = new DNI(this.marginTop, this.ele)
       this.ele.append(this.dni.ele)
     }
   }
