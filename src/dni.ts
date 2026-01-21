@@ -17,7 +17,7 @@ export class DNI extends HtmlElementWrapper {
   // it's something not interesting??
   static _createDniButton(marginTop: number) {
     let button = document.createElement('button');
-    button.setAttribute('class', 'style-scope yt-icon-button ytd-menu-renderer')
+    button.setAttribute('class', 'yt-spec-button-shape-next yt-spec-button-shape-next--mono yt-spec-button-shape-next--text yt-spec-button-shape-next__icon yt-spec-button-shape-next--size-m yt-spec-button-shape-next--icon-button')
     button.setAttribute('style', `margin-top: ${marginTop}px`)
 
     let svg = DNI._createSvg()
