@@ -1,12 +1,9 @@
 import {HtmlElementWrapper} from './common/html_element_wrapper';
 import {MenuContainer} from './menu_container';
-import {SVG_ID} from './constants';
 import {checkThenDo} from './util/util';
 import {log, logw} from './util/util_log';
 import {PlayCardInHomeWrapper} from './player_card_in_home';
 import {initInWatch} from './init_in_watch';
-import {SHORTS_MENU_CONTAINER_QUERY_SELECTOR, SHORTS_MENU_QUERY_SELECTOR} from './shorts';
-import {ElementByQueryFinder} from './common/element_finder';
 import {ShortInHome} from './short_in_home';
 
 class PreviewMenu extends HtmlElementWrapper {
@@ -147,29 +144,8 @@ function isYtbHome() {
 }
 
 
-// can you inject css not like this!!
-// this will not change!!
-function _addCss() {
-  // add css
-  const fillColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-inactive))';
-  // const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon))';
-  const fillHoverColor = 'var(--ytd-menu-renderer-button-color, var(--yt-spec-icon-active-other))';
-
-  let css = `#${SVG_ID}:hover {fill: ${fillHoverColor}}\n #${SVG_ID} {fill: ${fillColor};}`;
-  // let css = `#${SVG_ID}:hover {fill: #606060}\n #${SVG_ID} {fill: #8b8b8b}`
-  let style = document.createElement('style') as any;
-
-  if (style.styleSheet) {
-    style.styleSheet.cssText = css;
-  } else {
-    style.appendChild(document.createTextNode(css));
-  }
-  document.getElementsByTagName('head')[0].appendChild(style);
-}
-
 function _main() {
   const pathname = window.location.pathname
-  _addCss()
   initInWatch()
   if (pathname && pathname !== '/') {
     return
