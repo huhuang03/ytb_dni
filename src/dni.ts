@@ -8,22 +8,55 @@ import {SVG_ID} from './constants';
  */
 export class DNI extends HtmlElementWrapper {
   marginTop = 0
+  parent: HTMLElement
 
-  constructor(marginTop = 0) {
-    super(DNI._createDniButton(marginTop))
+  constructor(marginTop = 0, parent: HTMLElement) {
+    super(DNI._createDniButton(marginTop, parent))
     this.marginTop = marginTop
+    this.parent = parent
   }
 
-  // it's something not interesting??
-  static _createDniButton(marginTop: number) {
+  static _createDniButton(marginTop: number, parent: HTMLElement) {
+    const officialButton = this.findOfficialButton(parent)
+
     let button = document.createElement('button');
-    button.setAttribute('class', 'yt-spec-button-shape-next yt-spec-button-shape-next--mono yt-spec-button-shape-next--text yt-spec-button-shape-next__icon yt-spec-button-shape-next--size-m yt-spec-button-shape-next--icon-button')
+    if (officialButton) {
+      button.setAttribute('class', this.getCopyClass(officialButton))
+    }
+    button.setAttribute('class', (button.getAttribute('class') || '') + ' yt-spec-button-shape-next__icon')
     button.setAttribute('style', `margin-top: ${marginTop}px`)
 
     let svg = DNI._createSvg()
     svg.setAttribute('id', SVG_ID)
     button.appendChild(svg)
     return button
+  }
+
+  static getCopyClass(officialButton: HTMLElement): string {
+    var rst = officialButton.getAttribute('class') || ''
+    let children = officialButton.getElementsByTagName('div')
+    if (children.length > 0) {
+      rst += " "
+      rst += children[0].getAttribute('class') || ''
+    }
+    return rst
+  }
+
+  static findOfficialButton(parent: HTMLElement): HTMLElement | null {
+    // 先检查自己
+    if (parent.tagName.toLowerCase() === 'button') {
+      return parent;
+    }
+
+    // 深度优先遍历子元素
+    for (const child of Array.from(parent.children)) {
+      const found = this.findOfficialButton(child as HTMLElement);
+      if (found) {
+        return found;
+      }
+    }
+
+    return null;
   }
 
   // 创建svg。即那个圆圈中加一杠图案
