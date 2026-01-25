@@ -4,6 +4,8 @@ import {checkThenDo} from './util/util';
 import {PlayCardInHomeWrapper} from './player_card_in_home';
 import {initInWatch} from './init_in_watch';
 import {ShortInHome} from './short_in_home';
+import {log} from './util/util_log';
+import {createRafScheduler} from './util/util_raf';
 
 class PreviewMenu extends HtmlElementWrapper {
   constructor(root: HTMLElement) {
@@ -37,17 +39,31 @@ function queryPlayerList(): HTMLElement[] {
   return Array.from(document.querySelectorAll('yt-lockup-view-model'))
 }
 
+const playCardCache = new WeakMap<HTMLElement, PlayCardInHomeWrapper>();
+
+function createPlayCard(ele: HTMLElement): PlayCardInHomeWrapper {
+  const cached = playCardCache.get(ele);
+  if (cached) {
+    return cached;
+  }
+
+  const wrapper = new PlayCardInHomeWrapper(ele);
+  playCardCache.set(ele, wrapper);
+  return wrapper;
+}
+
 function run() {
   // the normal videos
+  log('run called')
   let playerList = queryPlayerList()
   playerList.forEach(ele => {
-    new PlayCardInHomeWrapper(ele as HTMLElement).init()
+    createPlayCard(ele).init()
   })
 
-  let shorts = Array.from(document.querySelectorAll('ytm-shorts-lockup-view-model-v2'))
-  shorts.forEach(ele => {
-    new ShortInHome(ele as HTMLElement).init()
-  })
+  // let shorts = Array.from(document.querySelectorAll('ytm-shorts-lockup-view-model-v2'))
+  // shorts.forEach(ele => {
+  //   new ShortInHome(ele as HTMLElement).init()
+  // })
 }
 
 // what's this?
@@ -108,16 +124,25 @@ function listenDynamicLoad() {
     return
   }
   const container = getItemsContainer()
-  if (container != null) {
-    new MutationObserver(() => {
-      if (!isYtbHome()) {
-        return
-      }
-      run()
-    }).observe(container, {
-      childList: true,
-    })
+  if (!container) {
+    return
   }
+
+  const scheduleRun = createRafScheduler(() => {
+    if (!isYtbHome()) return
+    run()
+  })
+
+  new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.addedNodes.length) {
+        scheduleRun()
+        break
+      }
+    }
+  }).observe(container, {
+    childList: true,
+  })
 }
 
 function _initial() {
@@ -141,7 +166,6 @@ function _initial() {
     return _getContentElement() != null && queryPlayerList().length > 0
   }, 4000, 500)
 }
-
 
 function getItemsContainer(): HTMLElement | null {
   const items = document.getElementsByTagName('ytd-rich-item-renderer')
