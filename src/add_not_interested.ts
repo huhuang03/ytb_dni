@@ -39,43 +39,35 @@ function queryPlayerList(): HTMLElement[] {
   return Array.from(document.querySelectorAll('yt-lockup-view-model'))
 }
 
-const playCardCache = new WeakMap<HTMLElement, PlayCardInHomeWrapper>();
+function createElementCreator<T>(
+  Ctor: new (el: HTMLElement) => T
+) {
+  const cache = new WeakMap<HTMLElement, T>()
 
-function createPlayCard(ele: HTMLElement): PlayCardInHomeWrapper {
-  const cached = playCardCache.get(ele);
-  if (cached) {
-    return cached;
+  return function getInstance(el: HTMLElement): T {
+    const cached = cache.get(el)
+    if (cached) return cached
+
+    const instance = new Ctor(el)
+    cache.set(el, instance)
+    return instance
   }
-
-  const wrapper = new PlayCardInHomeWrapper(ele);
-  playCardCache.set(ele, wrapper);
-  return wrapper;
 }
 
+const playCardCreator = createElementCreator(PlayCardInHomeWrapper)
+const shortInHomeCreator = createElementCreator(ShortInHome)
 
-const shortCache = new WeakMap<HTMLElement, ShortInHome>();
-
-function createShortInHome(ele: HTMLElement): ShortInHome {
-  const cached = shortCache.get(ele);
-  if (cached) {
-    return cached;
-  }
-
-  const wrapper = new ShortInHome(ele);
-  shortCache.set(ele, wrapper);
-  return wrapper;
-}
 
 function run() {
   log('run called')
   let playerList = queryPlayerList()
   playerList.forEach(ele => {
-    createPlayCard(ele).init()
+    playCardCreator(ele).init()
   })
 
   let shorts = Array.from(document.querySelectorAll('ytm-shorts-lockup-view-model-v2'))
   shorts.forEach(ele => {
-    createShortInHome(ele as HTMLElement).init()
+    shortInHomeCreator(ele as HTMLElement).init()
   })
 }
 
