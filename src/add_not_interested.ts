@@ -116,6 +116,7 @@ function listenDynamicLoad() {
       run()
     }).observe(container, {
       childList: true,
+      subtree: true
     })
   }
 }
@@ -141,7 +142,6 @@ function _initial() {
     return _getContentElement() != null && queryPlayerList().length > 0
   }, 4000, 500)
 }
-
 
 function getItemsContainer(): HTMLElement | null {
   const items = document.getElementsByTagName('ytd-rich-item-renderer')
