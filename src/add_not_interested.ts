@@ -130,7 +130,6 @@ function listenDynamicLoad() {
       run()
     }).observe(container, {
       childList: true,
-      subtree: true
     })
   }
 }
