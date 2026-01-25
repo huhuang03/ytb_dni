@@ -27,6 +27,7 @@ export class CardWrapper extends HtmlElementWrapper {
   }
 
   init(marginTop = 0) {
+    console.log('CardWrapper init called!!!')
     if (!this.ele.isConnected) return;
     const canAddBt = this.ele.offsetWidth > 0;
     if (!canAddBt) return;
@@ -40,6 +41,7 @@ export class CardWrapper extends HtmlElementWrapper {
       marginTop,
       this.checkClickReason
     );
+    console.log('dniContainer called!!!!')
     dniContainer.setMenu(() => this.buttonFinder.find(this.ele));
   }
 }

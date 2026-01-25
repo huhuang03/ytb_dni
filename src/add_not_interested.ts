@@ -37,17 +37,31 @@ function queryPlayerList(): HTMLElement[] {
   return Array.from(document.querySelectorAll('yt-lockup-view-model'))
 }
 
+const playCardCache = new WeakMap<HTMLElement, PlayCardInHomeWrapper>();
+
+function createPlayCard(ele: HTMLElement): PlayCardInHomeWrapper {
+  const cached = playCardCache.get(ele);
+  if (cached) {
+    return cached;
+  }
+
+  const wrapper = new PlayCardInHomeWrapper(ele);
+  playCardCache.set(ele, wrapper);
+  return wrapper;
+}
+
 function run() {
   // the normal videos
+  console.log('run called')
   let playerList = queryPlayerList()
   playerList.forEach(ele => {
-    new PlayCardInHomeWrapper(ele as HTMLElement).init()
+    createPlayCard(ele).init()
   })
 
-  let shorts = Array.from(document.querySelectorAll('ytm-shorts-lockup-view-model-v2'))
-  shorts.forEach(ele => {
-    new ShortInHome(ele as HTMLElement).init()
-  })
+  // let shorts = Array.from(document.querySelectorAll('ytm-shorts-lockup-view-model-v2'))
+  // shorts.forEach(ele => {
+  //   new ShortInHome(ele as HTMLElement).init()
+  // })
 }
 
 // what's this?
