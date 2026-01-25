@@ -42,8 +42,21 @@ export class CardWrapper extends HtmlElementWrapper {
       return
     }
     this.ele.dataset.__has_init_ytb_listener = '1'
+
+    let scheduled = false
+
+    const scheduleAdd = () => {
+      if (scheduled) return
+      scheduled = true
+
+      requestAnimationFrame(() => {
+        scheduled = false
+        this._add()
+      })
+    }
+
     new MutationObserver(() => {
-      this._add()
+      scheduleAdd()
     }).observe(this.ele, {
       childList: true,
       subtree: true,
