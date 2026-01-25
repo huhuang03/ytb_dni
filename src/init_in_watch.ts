@@ -1,37 +1,27 @@
 // not refactor to this file yet.
 
-import {checkThenDo} from './util/util';
+import {checkThenDo, createElementCreator} from './util/util';
 import {log, logw} from './util/util_log';
 import {RecommendInWatch} from './recommend_in_watch';
 
 function getRecommendList() {
-  return Array.from(document.querySelectorAll("ytd-watch-next-secondary-results-renderer yt-lockup-view-model"))
+  return Array.from(document.querySelectorAll("yt-lockup-view-model"))
 }
 
 function isWatchPage() {
   return location.pathname === '/watch'
 }
 
+const itemCreator = createElementCreator(RecommendInWatch)
+
 function run() {
+  log('init_in_watch run called!!!')
   if (!isWatchPage()) {
     return
   }
   getRecommendList().forEach(item => {
-    new RecommendInWatch(item as HTMLElement).init(0)
+    itemCreator(item as HTMLElement).init(0)
   })
-
-  // const mixItemRootList = document.querySelectorAll("ytd-compact-radio-renderer .details.style-scope.ytd-compact-radio-renderer")
-  // const validateMixItems = Array.from(mixItemRootList) as HTMLElement[]
-  //
-  // // short items
-  // const shortElements = document.querySelectorAll("yt-horizontal-list-renderer.ytd-reel-shelf-renderer ytd-reel-item-renderer")
-  // const shortItems = Array.from(shortElements) as HTMLElement[]
-  //
-  // validateItems.push(...validateMixItems)
-  // validateItems.push(...shortItems)
-  // for (let validateItem of validateItems) {
-  //   new PlayCardInHomeWrapper(validateItem).init(10)
-  // }
 }
 
 function _getRecommendListContainer() {
@@ -39,6 +29,7 @@ function _getRecommendListContainer() {
 }
 
 function _init_after_check_ready() {
+  log('_init_after_check_ready called!!!')
   run()
 
   const container = _getRecommendListContainer()
@@ -54,9 +45,11 @@ function _init_after_check_ready() {
 }
 
 export function initInWatch() {
+  log('initInWatch called')
   if (!isWatchPage()) {
     return
   }
+  log('begin checkThenDo')
   checkThenDo(_init_after_check_ready, () => {
     return isWatchPage() && getRecommendList().length > 0
   }, 4000)
