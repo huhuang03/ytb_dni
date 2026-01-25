@@ -4,6 +4,7 @@ import {checkThenDo} from './util/util';
 import {PlayCardInHomeWrapper} from './player_card_in_home';
 import {initInWatch} from './init_in_watch';
 import {ShortInHome} from './short_in_home';
+import {log} from './util/util_log';
 
 class PreviewMenu extends HtmlElementWrapper {
   constructor(root: HTMLElement) {
@@ -52,7 +53,7 @@ function createPlayCard(ele: HTMLElement): PlayCardInHomeWrapper {
 
 function run() {
   // the normal videos
-  console.log('run called')
+  log('run called')
   let playerList = queryPlayerList()
   playerList.forEach(ele => {
     createPlayCard(ele).init()

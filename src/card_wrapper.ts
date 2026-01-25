@@ -3,12 +3,13 @@ import {checkThenDo} from './util/util';
 import {MenuContainer} from './menu_container';
 import {ElementFinder} from './common/element_finder';
 import {SVG_ID} from './constants';
+import {log} from './util/util_log';
 
 export class CardWrapper extends HtmlElementWrapper {
-  canAddBt = false
   menuContainerFinder: ElementFinder
   buttonFinder: ElementFinder
   checkClickReason = true
+  marginTop = 0
 
   /**
    * @param ele ele 应该是desc的container
@@ -27,7 +28,29 @@ export class CardWrapper extends HtmlElementWrapper {
   }
 
   init(marginTop = 0) {
-    console.log('CardWrapper init called!!!')
+    this.marginTop = marginTop
+    this._add()
+    this._initListener()
+  }
+
+
+  /**
+   * for redo put the dni back
+   */
+  _initListener() {
+    if (this.ele.dataset.__has_init_ytb_listener) {
+      return
+    }
+    this.ele.dataset.__has_init_ytb_listener = '1'
+    new MutationObserver(() => {
+      this._add()
+    }).observe(this.ele, {
+      childList: true,
+      subtree: true,
+    })
+  }
+
+  _add() {
     if (!this.ele.isConnected) return;
     const canAddBt = this.ele.offsetWidth > 0;
     if (!canAddBt) return;
@@ -38,10 +61,10 @@ export class CardWrapper extends HtmlElementWrapper {
     if (found) return;
     const dniContainer = new MenuContainer(
       menuContainer,
-      marginTop,
+      this.marginTop,
       this.checkClickReason
     );
-    console.log('dniContainer called!!!!')
+    log('dniContainer called!!!!')
     dniContainer.setMenu(() => this.buttonFinder.find(this.ele));
   }
 }
