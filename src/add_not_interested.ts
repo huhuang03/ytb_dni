@@ -5,6 +5,7 @@ import {PlayCardInHomeWrapper} from './player_card_in_home';
 import {initInWatch} from './init_in_watch';
 import {ShortInHome} from './short_in_home';
 import {log} from './util/util_log';
+import {createRafScheduler} from './util/util_raf';
 
 class PreviewMenu extends HtmlElementWrapper {
   constructor(root: HTMLElement) {
@@ -123,16 +124,25 @@ function listenDynamicLoad() {
     return
   }
   const container = getItemsContainer()
-  if (container != null) {
-    new MutationObserver(() => {
-      if (!isYtbHome()) {
-        return
-      }
-      run()
-    }).observe(container, {
-      childList: true,
-    })
+  if (!container) {
+    return
   }
+
+  const scheduleRun = createRafScheduler(() => {
+    if (!isYtbHome()) return
+    run()
+  })
+
+  new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      if (m.addedNodes.length) {
+        scheduleRun()
+        break
+      }
+    }
+  }).observe(container, {
+    childList: true,
+  })
 }
 
 function _initial() {

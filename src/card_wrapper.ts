@@ -4,6 +4,7 @@ import {MenuContainer} from './menu_container';
 import {ElementFinder} from './common/element_finder';
 import {SVG_ID} from './constants';
 import {log} from './util/util_log';
+import {createRafScheduler} from './util/util_raf';
 
 export class CardWrapper extends HtmlElementWrapper {
   menuContainerFinder: ElementFinder
@@ -43,17 +44,9 @@ export class CardWrapper extends HtmlElementWrapper {
     }
     this.ele.dataset.__has_init_ytb_listener = '1'
 
-    let scheduled = false
-
-    const scheduleAdd = () => {
-      if (scheduled) return
-      scheduled = true
-
-      requestAnimationFrame(() => {
-        scheduled = false
-        this._add()
-      })
-    }
+    const scheduleAdd = createRafScheduler(() => {
+      this._add()
+    })
 
     new MutationObserver(() => {
       scheduleAdd()
