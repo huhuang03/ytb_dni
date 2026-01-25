@@ -1,7 +1,6 @@
 import {HtmlElementWrapper} from './common/html_element_wrapper';
 import {MenuContainer} from './menu_container';
 import {checkThenDo} from './util/util';
-import {logw} from './util/util_log';
 import {PlayCardInHomeWrapper} from './player_card_in_home';
 import {initInWatch} from './init_in_watch';
 import {ShortInHome} from './short_in_home';
@@ -100,22 +99,27 @@ function _getContentElement() {
 
 function _initItems() {
   run()
-  const e_content = _getContentElement()
-  if (e_content) {
+  listenDynamicLoad()
+}
+
+
+function listenDynamicLoad() {
+  if (!isYtbHome()) {
+    return
+  }
+  const container = getItemsContainer()
+  if (container != null) {
     new MutationObserver(() => {
-      if (isYtbHome()) {
-        run()
+      if (!isYtbHome()) {
+        return
       }
-    }).observe(e_content, {
+      run()
+    }).observe(container, {
       childList: true,
     })
-  } else {
-    logw('why content is null??')
   }
 }
 
-// some things it's too early this get called.
-// should wait for the content is ready!!
 function _initial() {
   if (!isYtbHome()) {
     return
@@ -136,6 +140,15 @@ function _initial() {
   }, () => {
     return _getContentElement() != null && queryPlayerList().length > 0
   }, 4000, 500)
+}
+
+
+function getItemsContainer(): HTMLElement | null {
+  const items = document.getElementsByTagName('ytd-rich-item-renderer')
+  if (items != null && items.length > 0) {
+    return items[0].parentElement
+  }
+  return null
 }
 
 function isYtbHome() {
