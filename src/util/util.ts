@@ -41,3 +41,18 @@ function _waitAndDoOnce(startTime: any, func: any, checkFunc: any,
     }
   }, checkInterval)
 }
+
+export function createElementCreator<T>(
+  Ctor: new (el: HTMLElement) => T
+) {
+  const cache = new WeakMap<HTMLElement, T>()
+
+  return function getInstance(el: HTMLElement): T {
+    const cached = cache.get(el)
+    if (cached) return cached
+
+    const instance = new Ctor(el)
+    cache.set(el, instance)
+    return instance
+  }
+}

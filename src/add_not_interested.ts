@@ -1,6 +1,6 @@
 import {HtmlElementWrapper} from './common/html_element_wrapper';
 import {MenuContainer} from './menu_container';
-import {checkThenDo} from './util/util';
+import {checkThenDo, createElementCreator} from './util/util';
 import {PlayCardInHomeWrapper} from './player_card_in_home';
 import {initInWatch} from './init_in_watch';
 import {ShortInHome} from './short_in_home';
@@ -39,20 +39,6 @@ function queryPlayerList(): HTMLElement[] {
   return Array.from(document.querySelectorAll('yt-lockup-view-model'))
 }
 
-function createElementCreator<T>(
-  Ctor: new (el: HTMLElement) => T
-) {
-  const cache = new WeakMap<HTMLElement, T>()
-
-  return function getInstance(el: HTMLElement): T {
-    const cached = cache.get(el)
-    if (cached) return cached
-
-    const instance = new Ctor(el)
-    cache.set(el, instance)
-    return instance
-  }
-}
 
 const playCardCreator = createElementCreator(PlayCardInHomeWrapper)
 const shortInHomeCreator = createElementCreator(ShortInHome)
