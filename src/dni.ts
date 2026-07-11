@@ -24,7 +24,8 @@ export class DNI extends HtmlElementWrapper {
       button.setAttribute('class', this.getCopyClass(officialButton))
     }
     button.setAttribute('class', (button.getAttribute('class') || '') + ' yt-spec-button-shape-next__icon')
-    button.setAttribute('style', `margin-top: ${marginTop}px`)
+    button.style.marginTop = `${marginTop}px`
+    button.style.pointerEvents = 'auto'
 
     let svg = DNI._createSvg()
     svg.setAttribute('id', SVG_ID)
@@ -32,8 +33,13 @@ export class DNI extends HtmlElementWrapper {
     return button
   }
 
+  /**
+   * need merge the sub's class to this, because the sub's class may contains the color property
+   * #27: child classes may also include pointer-events: none, so _createDniButton overrides it.
+   * @param officialButton
+   */
   static getCopyClass(officialButton: HTMLElement): string {
-    var rst = officialButton.getAttribute('class') || ''
+    let rst = officialButton.getAttribute('class') || ''
     let children = officialButton.getElementsByTagName('div')
     if (children.length > 0) {
       rst += " "
