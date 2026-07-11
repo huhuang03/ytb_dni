@@ -24,6 +24,17 @@ function copyManifest({ from, to }) {
   }
 }
 
+function cleanOutDir(dir) {
+  return {
+    name: 'clean-out-dir',
+    buildStart() {
+      fs.rmSync(dir, { recursive: true, force: true })
+      fs.mkdirSync(dir, { recursive: true })
+      console.log(`✔ Cleaned output dir: ${dir}`)
+    }
+  }
+}
+
 const commonPlugins = [
   typescript(),
   resolve()
@@ -38,6 +49,7 @@ export default [
       name: 'AddNotInterestedBundle'  // 全局变量名称
     },
     plugins: [
+      cleanOutDir(outDir),
       ...commonPlugins,
       customCopy({
         patterns: ['**/*'],
