@@ -3,7 +3,8 @@
     "build:chrome": "cross-env TARGET=chrome rollup -c",
     "build:firefox": "cross-env TARGET=firefox rollup -c",
     "build": "rollup -c",
-    "watch": "rollup -c --watch"
+    "watch": "rollup -c --watch",
+    "publish": "npm run build:chrome && npm run build:firefox && python scripts/publish.py"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.2",
