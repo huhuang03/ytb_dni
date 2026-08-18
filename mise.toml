@@ -1,8 +1,8 @@
 [tools]
 node = "22"
 
-[tasks.build]
-description = "Build release packages"
+[tasks.publish]
+description = "build the publish"
 run = [
   "yarn build:firefox",
   "yarn build:chrome",
