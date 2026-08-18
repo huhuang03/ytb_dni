@@ -1,2 +1,11 @@
 [tools]
 node = "22"
+
+[tasks.build]
+description = "Build release packages"
+run = [
+  "yarn build:firefox",
+  "yarn build:chrome",
+  "python scripts/publish.py",
+  "python scripts/distribute_firefox_src.py",
+]
