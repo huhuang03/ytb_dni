@@ -26,6 +26,7 @@ export class DNI extends HtmlElementWrapper {
     button.setAttribute('class', (button.getAttribute('class') || '') + ' yt-spec-button-shape-next__icon')
     button.style.marginTop = `${marginTop}px`
     button.style.pointerEvents = 'auto'
+    button.style.padding = '0'
 
     let svg = DNI._createSvg()
     svg.setAttribute('id', SVG_ID)
